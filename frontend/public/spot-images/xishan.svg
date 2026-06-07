@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#eff6ff"/>
+  <path d="M0 280 L145 145 L260 260 L390 105 L640 285 L640 360 L0 360Z" fill="#166534"/>
+  <path d="M390 105 L440 185 L340 180Z" fill="#bbf7d0" opacity=".75"/>
+  <path d="M0 306 C120 270 230 322 350 288 C470 252 555 272 640 248 L640 360 L0 360Z" fill="#60a5fa" opacity=".55"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">西山风景区</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">山地景观 · 俯瞰滇池</text>
+</svg>

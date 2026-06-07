@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#fff1f2"/>
+  <circle cx="180" cy="210" r="50" fill="#fb7185"/><circle cx="270" cy="180" r="55" fill="#f472b6"/><circle cx="380" cy="210" r="50" fill="#facc15"/><circle cx="480" cy="185" r="54" fill="#a78bfa"/>
+  <path d="M0 285 C130 250 230 310 360 265 C470 226 560 250 640 225 L640 360 L0 360Z" fill="#22c55e"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">斗南花市</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">鲜花交易 · 特色市场</text>
+</svg>

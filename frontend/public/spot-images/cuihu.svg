@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#ecfdf5"/>
+  <ellipse cx="355" cy="225" rx="190" ry="78" fill="#67e8f9"/>
+  <path d="M0 300 C130 245 230 315 350 270 C465 228 540 260 640 235 L640 360 L0 360Z" fill="#22c55e"/>
+  <circle cx="110" cy="210" r="42" fill="#16a34a"/>
+  <circle cx="520" cy="178" r="52" fill="#16a34a"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">翠湖公园</text>
+  <text x="44" y="122" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">城市湖景 · 老城漫游</text>
+</svg>

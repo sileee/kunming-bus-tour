@@ -1,0 +1,36 @@
+{
+  "name": "kunming-bus-tour-route-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "昆明公交旅游路线数据可视化完整工程",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "keywords": [
+    "kunming",
+    "bus",
+    "tourism",
+    "visualization",
+    "vue",
+    "express",
+    "mysql"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@antv/l7": "^2.25.4",
+    "@antv/l7-maps": "^2.25.4",
+    "@element-plus/icons-vue": "^2.3.2",
+    "@kjgl77/datav-vue3": "^1.7.4",
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "echarts": "^6.0.0",
+    "element-plus": "^2.14.0",
+    "leaflet": "^1.9.4",
+    "leaflet-ant-path": "^1.3.0",
+    "leaflet.heat": "^0.2.0",
+    "vue-echarts": "^8.0.1"
+  }
+}

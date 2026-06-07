@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#f8fafc"/>
+  <rect x="110" y="130" width="420" height="150" rx="8" fill="#b45309"/>
+  <rect x="150" y="170" width="46" height="80" fill="#fef3c7"/><rect x="250" y="170" width="46" height="80" fill="#fef3c7"/><rect x="350" y="170" width="46" height="80" fill="#fef3c7"/><rect x="450" y="170" width="46" height="80" fill="#fef3c7"/>
+  <path d="M90 132 L320 58 L550 132Z" fill="#92400e"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">云南大学</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">历史校园 · 人文街区</text>
+</svg>

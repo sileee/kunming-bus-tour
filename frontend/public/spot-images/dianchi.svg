@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#dbeafe"/>
+  <path d="M0 220 C110 180 210 230 320 190 C440 145 545 190 640 150 L640 360 L0 360Z" fill="#60a5fa"/>
+  <path d="M0 285 C115 245 215 300 335 255 C450 212 555 250 640 215 L640 360 L0 360Z" fill="#2563eb" opacity=".45"/>
+  <circle cx="505" cy="72" r="38" fill="#fde68a"/>
+  <text x="42" y="72" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#0f172a">滇池风光</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#334155">湖岸观景 · 海鸥季</text>
+</svg>

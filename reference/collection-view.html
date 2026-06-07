@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>数据采集 - 昆明公交旅游路线数据可视化平台</title>
+<style>
+:root{font-family:"Microsoft YaHei","PingFang SC",sans-serif;--bg-deep:#060e1a;--bg-panel:#0a1628;--bg-card:#0d1f38;--border:#1a3a5c;--cyan:#00d4ff;--text:#e0f0ff;--text-dim:#7ab3d0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-deep);color:var(--text);min-height:100vh;display:flex}
+.sidebar{width:280px;background:#0a1628;padding:24px 18px;display:flex;flex-direction:column;gap:16px;border-right:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:44px;height:44px;border-radius:8px;background:var(--cyan);color:#060e1a;font-weight:800;font-size:18px;display:grid;place-items:center}
+.brand strong{display:block;font-size:15px;color:var(--text)}.brand small{color:var(--text-dim);font-size:11px}
+.nav button{padding:10px 14px;border:0;border-radius:8px;background:transparent;color:#94a3b8;text-align:left;cursor:pointer;font-size:13px;display:block;width:100%;transition:all .2s}
+.nav button.active,.nav button:hover{background:rgba(0,212,255,.08);color:var(--cyan)}
+.workspace{flex:1;padding:24px;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.topbar h1{font-size:26px;color:var(--text)}.topbar p{color:var(--text-dim);font-size:13px;margin-bottom:4px}
+.collector-hero{display:flex;justify-content:space-between;align-items:center;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px}
+.collector-hero h2{font-size:22px;color:var(--text);margin-bottom:8px}
+.collector-hero p{color:var(--text-dim);font-size:13px;line-height:1.7}.eyebrow{color:var(--cyan);font-size:12px;font-weight:700;margin-bottom:4px}
+.start-btn{padding:14px 24px;border:0;border-radius:8px;background:#dc2626;color:#fff;font-weight:800;font-size:14px;cursor:pointer;animation:btn-pulse 2s infinite}
+@keyframes btn-pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
+.pipeline{display:flex;align-items:center;gap:0;padding:14px 18px;background:rgba(0,212,255,.04);border:1px solid var(--border);border-radius:10px;margin-bottom:16px}
+.pnode{padding:8px 14px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);font-size:11px;text-align:center;color:var(--text-dim)}
+.pnode.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.08)}
+.parrow{width:28px;height:2px;background:repeating-linear-gradient(90deg,var(--cyan) 0,var(--cyan) 5px,transparent 5px,transparent 8px)}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.metric-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:16px;display:grid;gap:6px}
+.metric-card span{color:var(--text-dim);font-size:13px}.metric-card strong{font-size:28px;color:var(--text)}.metric-card small{color:var(--text-dim);font-size:12px}
+.content-row{display:grid;grid-template-columns:1.3fr 0.7fr;gap:16px;margin-bottom:16px}
+.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:18px}
+.chart-mock{height:220px;position:relative}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:180px;padding:0 5px}
+.cb{flex:1;border-radius:3px 3px 0 0;min-width:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid label{display:grid;gap:4px;color:var(--text-dim);font-size:12px}
+.form-grid input, .form-grid select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text);font-size:12px}
+.submit-btn{padding:10px;border:0;border-radius:6px;background:var(--cyan);color:#060e1a;font-weight:700;cursor:pointer;font-size:13px;grid-column:1/-1}
+.table-head{display:grid;grid-template-columns:60px 1fr 60px 60px 60px;gap:10px;padding:8px 12px;font-size:11px;color:var(--text-dim);font-weight:600}
+.table-row{display:grid;grid-template-columns:60px 1fr 60px 60px 60px;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:6px;font-size:12px;margin-bottom:4px}
+.table-row:nth-child(even){background:rgba(255,255,255,.04)}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--bg-panel);border:1px solid var(--cyan);border-left:3px solid #16a34a;border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:99}
+.toast b{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="brand"><span class="brand-mark">KM</span><div><strong>昆明公交旅游</strong><small>Smart Transit</small></div></div>
+  <nav class="nav">
+    <button>运营总览</button><button>动态地图</button><button class="active">数据采集</button><button>线路详情</button><button>数据分析</button><button>数据图表</button><button>后台管理</button>
+  </nav>
+</div>
+
+<div class="workspace">
+  <header class="topbar">
+    <div><p>智慧城市 · 公共交通数据可视化场景</p><h1>昆明公交旅游路线数据可视化平台</h1></div>
+  </header>
+
+  <div class="collector-hero">
+    <div><p class="eyebrow">数据采集过程</p><h2>车载终端 → API 接口 → 全站可视化联动</h2><p>点击开始采集后，系统会持续模拟公交车 GPS、客流传感器和电子站牌上报数据；切换页面也会继续运行，并驱动首页、地图、详情和分析图表变化。</p></div>
+    <button class="start-btn">停止采集</button>
+  </div>
+
+  <div class="pipeline">
+    <div class="pnode active">车载终端<br/><small>GPS / 传感器</small></div><div class="parrow"></div>
+    <div class="pnode active">POST API<br/><small>/collection/samples</small></div><div class="parrow"></div>
+    <div class="pnode active">数据入库<br/><small>collection_samples</small></div><div class="parrow"></div>
+    <div class="pnode active">客流模型<br/><small>collectionFactor</small></div><div class="parrow"></div>
+    <div class="pnode active">全站可视化<br/><small>运营总览/地图/图表</small></div>
+  </div>
+
+  <section class="dash-grid">
+    <div class="metric-card"><span>采集样本</span><strong>856</strong><small>最近运行数据</small></div>
+    <div class="metric-card"><span>在线设备</span><strong>10</strong><small>模拟上报终端</small></div>
+    <div class="metric-card"><span>平均速度</span><strong>28.5</strong><small>km/h</small></div>
+    <div class="metric-card"><span>平均满载率</span><strong>68.2%</strong><small>影响客流模型</small></div>
+  </section>
+
+  <section class="content-row">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <div><p class="eyebrow">实时可视化</p><h3 style="font-size:16px;">采集数据趋势</h3></div>
+        <span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#dc2626;color:#fff;font-size:11px;font-weight:700;animation:btn-pulse 1.2s infinite">采集中</span>
+      </div>
+      <div class="chart-mock">
+        <div class="chart-bars">
+          <div class="cb" style="height:60%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:55%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:75%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:70%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:80%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:65%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:90%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:72%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:68%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:85%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:78%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:62%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:88%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:71%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+          <div class="cb" style="height:82%;background:linear-gradient(0deg,#1a3a5c,#dc2626)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <p class="eyebrow">新增数据</p>
+      <h3 style="font-size:16px;margin-bottom:12px;">手动补录样本</h3>
+      <form class="form-grid">
+        <label>线路<select><option>44路 昆明站-海埂滇池线</option></select></label>
+        <label>速度 km/h<input type="number" value="28"></label>
+        <label>车内人数<input type="number" value="42"></label>
+        <label>满载率 %<input type="number" value="68"></label>
+        <label style="grid-column:1/-1">来源<input value="人工补录"></label>
+        <button class="submit-btn" type="button">新增并驱动全站变化</button>
+      </form>
+      <p style="color:var(--cyan);font-size:12px;margin-top:8px;">手动新增采集数据成功，已进入全站可视化模型</p>
+    </div>
+  </section>
+
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="font-size:16px;">最近采集记录</h3><span style="color:var(--text-dim);font-size:12px">每 2 秒刷新</span>
+    </div>
+    <div class="table-head"><span>线路</span><span>来源</span><span>速度</span><span>人数</span><span>满载率</span></div>
+    <div class="table-row"><strong>44路</strong><span>自动采集仿真器</span><span>32 km/h</span><span>48</span><span>71%</span></div>
+    <div class="table-row"><strong>73路</strong><span>自动采集仿真器</span><span>28 km/h</span><span>42</span><span>62%</span></div>
+    <div class="table-row"><strong>2路</strong><span>自动采集仿真器</span><span>25 km/h</span><span>38</span><span>56%</span></div>
+    <div class="table-row"><strong>A1路</strong><span>自动采集仿真器</span><span>30 km/h</span><span>45</span><span>67%</span></div>
+    <div class="table-row"><strong>94路</strong><span>自动采集仿真器</span><span>22 km/h</span><span>31</span><span>46%</span></div>
+    <div class="table-row"><strong>K31路</strong><span>自动采集仿真器</span><span>35 km/h</span><span>52</span><span>78%</span></div>
+    <div class="table-row"><strong>24路</strong><span>自动采集仿真器</span><span>27 km/h</span><span>40</span><span>59%</span></div>
+    <div class="table-row"><strong>100路</strong><span>自动采集仿真器</span><span>26 km/h</span><span>36</span><span>53%</span></div>
+  </div>
+</div>
+
+<div class="toast">
+  <b>✓</b> 44路、73路、2路 新采集样本已入库，全站可视化已更新
+</div>
+</body>
+</html>

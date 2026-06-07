@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#fff7ed"/>
+  <rect x="70" y="122" width="92" height="155" rx="6" fill="#f97316"/><rect x="190" y="92" width="92" height="185" rx="6" fill="#ef4444"/><rect x="310" y="132" width="92" height="145" rx="6" fill="#f59e0b"/><rect x="430" y="108" width="120" height="169" rx="6" fill="#2563eb"/>
+  <path d="M0 292 H640 V360 H0Z" fill="#334155"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">南屏街</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">商业步行街 · 夜游消费</text>
+</svg>

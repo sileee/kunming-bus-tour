@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s \"https://restapi.amap.com/v3/direction/driving?origin=102.7229,25.0156&destination=102.662,25.058&waypoints=102.7217,25.0401;102.7148,25.0393&key=725c214891fe73d91e805a4b10365a99&extensions=all\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/api/health)",
+      "Bash(curl -s http://localhost:3000/api/spots)",
+      "Bash(curl -s -X POST http://localhost:3000/api/admin/recalculate-heat)",
+      "Bash(curl -s http://localhost:3000/api/statistics/overview)",
+      "Bash(sed -i 's/passengerFlow \\\\/ 950/passengerFlow \\\\/ 1800/g' 动态数据模型说明.md)",
+      "Bash(sed -i 's/avgSpotHeat \\\\\\\\* 0.58/avgSpotHeat * 0.45/g' 动态数据模型说明.md)",
+      "Bash(sed -i 's/景点热度系数 \\(SpotHeatFactor\\) 动态注入 ±14% 随机抖动/景点热度系数 \\(SpotHeatFactor\\) 由后台管理页手动触发刷新/g' 动态数据模型说明.md)",
+      "Bash(pkill -f \"node.*server.js\")",
+      "Bash(node src/server.js)",
+      "Bash(curl -s http://localhost:3000/api/stops/1)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\)['data']; print\\(f'Stop: {d[\\\\\"name\\\\\"]} | Routes: {len\\(d[\\\\\"routes\\\\\"]\\)} | Nearby Spots: {len\\(d[\\\\\"nearbySpots\\\\\"]\\)}'\\)\")",
+      "Bash(curl -s http://localhost:3000/api/collection/samples/export)",
+      "Bash(curl -s http://localhost:3000/api/statistics/trend?minutes=5)",
+      "Bash(curl -s http://localhost:3000/api/statistics/trend?minutes=60)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'共 {d[\\\\\"count\\\\\"]} 个快照点'\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(npx vite *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(npm install *)",
+      "Bash(curl -s http://localhost:3000/api/health)",
+      "Bash(curl -s \"https://webapi.amap.com/maps?v=2.0&key=725c214891fe73d91e805a4b10365a99\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Vue:', d.get\\('dependencies',{}\\).get\\('vue','?'\\)\\); print\\('Vite:', d.get\\('devDependencies',{}\\).get\\('vite','?'\\)\\); print\\('ECharts:', d.get\\('dependencies',{}\\).get\\('echarts','?'\\)\\); print\\('Leaflet:', d.get\\('dependencies',{}\\).get\\('leaflet','?'\\)\\); print\\('ElementPlus:', d.get\\('dependencies',{}\\).get\\('element-plus','?'\\)\\)\")",
+      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://localhost:3000/api/health)",
+      "Bash(node -e \"console.log\\('L7:', require\\('@antv/l7/package.json'\\).version\\); console.log\\('L7-maps:', require\\('@antv/l7-maps/package.json'\\).version\\)\")",
+      "WebFetch(domain:hotironbox.com)",
+      "Bash(where git *)"
+    ]
+  }
+}

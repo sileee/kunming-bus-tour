@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#e0f2fe"/>
+  <path d="M0 225 C110 188 220 245 330 198 C450 150 540 194 640 160 L640 360 L0 360Z" fill="#38bdf8"/>
+  <path d="M0 300 C130 250 230 325 360 275 C475 232 555 255 640 230 L640 360 L0 360Z" fill="#22c55e"/>
+  <path d="M410 122 l38 20 l-42 5 l-28 29 l6 -41 l-22 -35z" fill="#fff"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#0f172a">海埂公园</text>
+  <text x="44" y="122" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">滇池岸线 · 观鸥路线</text>
+</svg>

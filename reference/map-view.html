@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>动态地图 - 昆明公交旅游路线数据可视化平台</title>
+<style>
+:root{font-family:"Microsoft YaHei","PingFang SC",sans-serif;--bg-deep:#060e1a;--bg-panel:#0a1628;--bg-card:#0d1f38;--border:#1a3a5c;--cyan:#00d4ff;--text:#e0f0ff;--text-dim:#7ab3d0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-deep);color:var(--text);min-height:100vh;display:flex}
+.sidebar{width:280px;background:#0a1628;padding:24px 18px;display:flex;flex-direction:column;gap:16px;border-right:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:44px;height:44px;border-radius:8px;background:var(--cyan);color:#060e1a;font-weight:800;font-size:18px;display:grid;place-items:center}
+.brand strong{display:block;font-size:15px;color:var(--text)}.brand small{color:var(--text-dim);font-size:11px}
+.nav button{padding:10px 14px;border:0;border-radius:8px;background:transparent;color:#94a3b8;text-align:left;cursor:pointer;font-size:13px;display:block;width:100%;transition:all .2s}
+.nav button.active,.nav button:hover{background:rgba(0,212,255,.08);color:var(--cyan)}
+.workspace{flex:1;padding:20px;min-width:0;display:flex;gap:16px}
+.route-list{width:260px;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-y:auto}
+.route-list h3{font-size:16px;margin-bottom:10px;color:var(--text)}
+.route-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px;margin-bottom:6px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;text-align:left;font-size:12px;transition:all .2s}
+.route-btn:hover,.route-btn.active{border-color:var(--cyan);background:rgba(0,212,255,.06)}
+.route-btn .dot{width:12px;height:30px;border-radius:6px;flex-shrink:0}
+.route-btn strong{font-size:12px;display:block}.route-btn small{color:var(--text-dim);font-size:10px}
+.map-area{flex:1;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;position:relative;overflow:hidden;min-height:600px}
+.map-bg{width:100%;height:100%;background:linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),#0a1628;background-size:40px 40px}
+.map-route{position:absolute;height:3px;border-radius:2px;opacity:.8;transform-origin:left center;box-shadow:0 0 8px currentColor}
+.r-2{left:18%;top:20%;width:55%;transform:rotate(8deg);background:#2563eb}
+.r-44{left:15%;top:45%;width:62%;transform:rotate(-5deg);background:#0f766e}
+.r-73{left:20%;top:38%;width:50%;transform:rotate(3deg);background:#dc2626}
+.r-a1{left:50%;top:12%;width:40%;transform:rotate(25deg);background:#7c3aed}
+.r-94{left:10%;top:62%;width:35%;transform:rotate(-15deg);background:#4d7c0f}
+.map-stop{position:absolute;width:18px;height:18px;border-radius:50%;background:#0f172a;border:2px solid #fff;color:#fff;display:grid;place-items:center;font-size:9px;font-weight:700;z-index:2;box-shadow:0 4px 8px rgba(0,0,0,.4);cursor:pointer}
+.s1{left:20%;top:18%} .s2{left:32%;top:20%} .s3{left:44%;top:22%} .s4{left:30%;top:44%} .s5{left:38%;top:40%} .s6{left:22%;top:60%} .s7{left:55%;top:24%}
+.map-arrow{position:absolute;width:24px;height:24px;z-index:3;transition:all .14s linear}
+.map-arrow svg{filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.arrow-4{left:50%;top:26%}.arrow-2{left:60%;top:22%}.arrow-1{left:35%;top:43%}
+.telemetry{position:absolute;right:16px;top:16px;width:280px;background:rgba(10,22,40,.94);border:1px solid var(--border);border-radius:10px;padding:14px;z-index:5}
+.telemetry h3{font-size:15px;color:var(--text);margin-bottom:8px}
+.telemetry p.eyebrow{color:var(--cyan);font-size:11px;font-weight:700;margin-bottom:4px}
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.t-grid span{background:rgba(0,212,255,.06);padding:8px;border-radius:6px;font-size:11px;color:var(--text-dim)}
+.t-grid strong{display:block;color:var(--cyan);font-size:14px;margin-top:2px}
+.next-stop{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:6px;background:rgba(37,99,235,.08);font-size:12px;margin-bottom:8px}
+.next-cur{color:var(--text-dim)}.next-arrow{color:var(--cyan);font-weight:700}.next-next{color:var(--cyan);font-weight:700}
+.view-btns{display:flex;gap:4px;margin-bottom:8px}
+.view-btns button{flex:1;padding:6px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-dim);cursor:pointer;font-size:11px}
+.view-btns button.active{background:var(--cyan);color:#060e1a;border-color:var(--cyan)}
+.speed-ctrl{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;background:rgba(0,212,255,.06);font-size:11px}
+.speed-ctrl span{color:var(--text-dim)}.speed-ctrl strong{color:var(--cyan)}
+.speed-ctrl input{flex:1;accent-color:var(--cyan)}
+.legend{position:absolute;left:16px;bottom:16px;background:rgba(10,22,40,.9);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--text-dim);z-index:4}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="brand"><span class="brand-mark">KM</span><div><strong>昆明公交旅游</strong><small>Smart Transit</small></div></div>
+  <nav class="nav">
+    <button>运营总览</button><button class="active">动态地图</button><button>数据采集</button><button>线路详情</button><button>数据分析</button><button>数据图表</button><button>后台管理</button>
+  </nav>
+</div>
+
+<div class="workspace">
+  <div class="route-list">
+    <p style="color:var(--cyan);font-size:12px;font-weight:700;margin-bottom:4px;">全部线路实时运行</p>
+    <h3>10 条线路同步监控</h3>
+    <button class="route-btn"><span class="dot" style="background:#2563eb"></span><div><strong>2路</strong><small>昆明站 → 黄土坡</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#0f766e"></span><div><strong>44路</strong><small>昆明站 → 海埂公园</small></div></button>
+    <button class="route-btn active"><span class="dot" style="background:#dc2626"></span><div><strong>73路</strong><small>护国桥 → 海埂公园</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#7c3aed"></span><div><strong>A1路</strong><small>世博园 → 民族村</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#ea580c"></span><div><strong>100路</strong><small>小西门 → 圆通山</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#0891b2"></span><div><strong>24路</strong><small>昆明站 → 海埂公园</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#16a34a"></span><div><strong>K31路</strong><small>昆明南站 → 斗南花市</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#be123c"></span><div><strong>253路</strong><small>官渡古镇 → 斗南花市</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#4d7c0f"></span><div><strong>94路</strong><small>海埂公园 → 高峣</small></div></button>
+    <button class="route-btn"><span class="dot" style="background:#9333ea"></span><div><strong>47路</strong><small>菊花村 → 世博园</small></div></button>
+    <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim)">
+      <strong style="color:var(--text)">高德 3D 地图</strong><br/>所有线路箭头沿真实道路同步移动，点击线路可高亮查看详情
+    </div>
+  </div>
+
+  <div class="map-area">
+    <div class="map-bg">
+      <div class="map-route r-2"></div><div class="map-route r-44"></div><div class="map-route r-73"></div>
+      <div class="map-route r-a1"></div><div class="map-route r-94"></div>
+      <span class="map-stop s1">1</span><span class="map-stop s2">2</span><span class="map-stop s3">3</span>
+      <span class="map-stop s4">4</span><span class="map-stop s5">5</span><span class="map-stop s6">6</span>
+      <span class="map-stop s7">7</span>
+      <div class="map-arrow arrow-1"><svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 22,19 19,19 19,23 5,23 5,19 2,19" fill="#0f766e" stroke="#fff" stroke-width="1.5"/></svg></div>
+      <div class="map-arrow arrow-2"><svg width="26" height="26" viewBox="0 0 24 24"><polygon points="12,2 22,19 19,19 19,23 5,23 5,19 2,19" fill="#2563eb" stroke="#fff" stroke-width="1.5"/></svg></div>
+      <div class="map-arrow arrow-4"><svg width="26" height="26" viewBox="0 0 24 24"><polygon points="12,2 22,19 19,19 19,23 5,23 5,19 2,19" fill="#7c3aed" stroke="#fff" stroke-width="1.5"/></svg></div>
+    </div>
+
+    <div class="telemetry">
+      <p class="eyebrow">高德 3D 地图 · 全部线路实时运行</p>
+      <h3>73路 护国桥-海埂公园观鸥线</h3>
+      <div class="next-stop"><span class="next-cur">南屏街东口</span><span class="next-arrow">→</span><span class="next-next">金马坊</span></div>
+      <div class="t-grid">
+        <span>速度<strong>32 km/h</strong></span>
+        <span>车内人数<strong>48</strong></span>
+        <span>满载率<strong>71%</strong></span>
+      </div>
+      <div class="view-btns">
+        <button>自由</button><button class="active">跟随</button><button>车内</button>
+      </div>
+      <div class="speed-ctrl"><span>速率</span><input type="range" value="1" min="0.25" max="3" step="0.25"><strong>1.00x</strong></div>
+      <small style="color:var(--text-dim);font-size:11px;display:block;margin-top:6px;">采集数据实时驱动箭头速度，点击站点可跳转视角。</small>
+    </div>
+    <div class="legend"><strong>图例：</strong> 彩色线=公交线路 · 圆圈=站点序号 · 箭头=运行中的公交车</div>
+  </div>
+</div>
+</body>
+</html>

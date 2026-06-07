@@ -1,0 +1,24 @@
+# ============================================================
+# Render 一键部署配置
+# 把这个文件放到项目根目录，推送到 GitHub
+# 然后在 Render 中创建 Blueprint 即可自动部署
+# ============================================================
+
+services:
+  - type: web
+    name: kunming-bus-tour
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npm run build:frontend
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_MODE
+        value: file
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASS
+        value: admin123

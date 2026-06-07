@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#fffbeb"/>
+  <path d="M90 260 H550 V292 H90Z" fill="#78350f"/><path d="M120 165 H520 V190 H120Z" fill="#92400e"/><path d="M92 166 L320 80 L548 166Z" fill="#b45309"/>
+  <rect x="165" y="190" width="62" height="70" fill="#fef3c7"/><rect x="290" y="190" width="62" height="70" fill="#fef3c7"/><rect x="415" y="190" width="62" height="70" fill="#fef3c7"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">官渡古镇</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">历史街巷 · 非遗小吃</text>
+</svg>

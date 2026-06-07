@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dff7ef"/><stop offset="1" stop-color="#93c5fd"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M0 265 C120 210 215 280 330 230 C430 185 520 225 640 178 L640 360 L0 360Z" fill="#16a34a" opacity=".72"/>
+  <path d="M40 282 C140 245 250 300 360 255 C450 218 550 248 640 220" fill="none" stroke="#fff" stroke-width="14" opacity=".78"/>
+  <text x="42" y="78" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">昆明城市旅游</text>
+  <text x="44" y="122" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">公交路线可视化</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#ecfeff"/>
+  <path d="M0 265 C160 210 270 300 430 235 C520 198 585 220 640 200 L640 360 L0 360Z" fill="#38bdf8"/>
+  <path d="M220 245 H420 V270 H220Z" fill="#92400e"/><rect x="255" y="150" width="130" height="95" fill="#b45309"/><path d="M235 152 L320 92 L405 152Z" fill="#f59e0b"/>
+  <text x="42" y="76" font-size="42" font-family="Microsoft YaHei, Arial" font-weight="700" fill="#122033">大观公园</text>
+  <text x="44" y="118" font-size="22" font-family="Microsoft YaHei, Arial" fill="#475569">大观楼 · 滇池景观</text>
+</svg>

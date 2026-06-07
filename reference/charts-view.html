@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>数据图表 - 昆明公交旅游路线数据可视化平台</title>
+<style>
+:root{font-family:"Microsoft YaHei","PingFang SC",sans-serif;--bg-deep:#060e1a;--bg-panel:#0a1628;--bg-card:#0d1f38;--border:#1a3a5c;--cyan:#00d4ff;--text:#e0f0ff;--text-dim:#7ab3d0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-deep);color:var(--text);min-height:100vh;display:flex}
+.sidebar{width:280px;background:#0a1628;padding:24px 18px;display:flex;flex-direction:column;gap:16px;border-right:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:44px;height:44px;border-radius:8px;background:var(--cyan);color:#060e1a;font-weight:800;font-size:18px;display:grid;place-items:center}
+.brand strong{display:block;font-size:15px;color:var(--text)}.brand small{color:var(--text-dim);font-size:11px}
+.nav button{padding:10px 14px;border:0;border-radius:8px;background:transparent;color:#94a3b8;text-align:left;cursor:pointer;font-size:13px;display:block;width:100%;transition:all .2s}
+.nav button.active,.nav button:hover{background:rgba(0,212,255,.08);color:var(--cyan)}
+.workspace{flex:1;padding:24px;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.topbar h1{font-size:26px;color:var(--text)}.topbar p{color:var(--text-dim);font-size:13px;margin-bottom:4px}
+.topbar-clock{color:var(--cyan);font-weight:700;font-size:14px}
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.chart-panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:16px}
+.chart-panel .eyebrow{color:var(--cyan);font-size:12px;font-weight:700;margin-bottom:8px}
+.chart-panel h3{color:var(--text);font-size:16px;margin-bottom:12px}
+.chart-area{width:100%;height:200px;position:relative;overflow:hidden}
+/* Bar chart simulation */
+.bar-chart{display:flex;align-items:flex-end;gap:10px;height:160px;padding:0 10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .6s}
+.bar-label{font-size:10px;color:var(--text-dim)}
+.bar-value{font-size:10px;color:var(--cyan)}
+/* Line chart simulation */
+.line-chart{position:relative;height:160px}
+.line-svg{width:100%;height:100%}
+/* Horizontal bar simulation */
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hbar-label{width:70px;text-align:right;font-size:11px;color:var(--text-dim)}
+.hbar-track{flex:1;height:14px;background:rgba(0,212,255,.06);border-radius:4px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:0 4px 4px 0;transition:width .6s}
+.hbar-value{width:36px;font-size:11px;color:var(--cyan);font-weight:700}
+/* Pie simulation */
+.pie-container{display:flex;align-items:center;gap:20px;height:160px}
+.pie-svg{width:140px;height:140px}
+.pie-legend{display:grid;gap:6px}
+.pie-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim)}
+.pie-dot{width:10px;height:10px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="brand"><span class="brand-mark">KM</span><div><strong>昆明公交旅游</strong><small>Smart Transit</small></div></div>
+  <nav class="nav">
+    <button>运营总览</button><button>动态地图</button><button>数据采集</button><button>线路详情</button><button>数据分析</button><button class="active">数据图表</button><button>后台管理</button>
+  </nav>
+</div>
+
+<div class="workspace">
+  <header class="topbar">
+    <div><p>智慧城市 · 公共交通数据可视化场景</p><h1>昆明公交旅游路线数据可视化平台</h1></div>
+    <span class="topbar-clock">2026-05-11 14:32:10</span>
+  </header>
+
+  <section class="charts-grid">
+    <!-- 1. Route flow bar chart -->
+    <article class="chart-panel">
+      <p class="eyebrow">线路日均客流量</p>
+      <h3>人次 / 日</h3>
+      <div class="chart-area">
+        <div class="bar-chart">
+          <div class="bar-col"><div class="bar" style="height:100px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">21k</span><span class="bar-label">44路</span></div>
+          <div class="bar-col"><div class="bar" style="height:95px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">19k</span><span class="bar-label">73路</span></div>
+          <div class="bar-col"><div class="bar" style="height:80px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">17k</span><span class="bar-label">A1路</span></div>
+          <div class="bar-col"><div class="bar" style="height:72px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">15k</span><span class="bar-label">2路</span></div>
+          <div class="bar-col"><div class="bar" style="height:62px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">12k</span><span class="bar-label">94路</span></div>
+          <div class="bar-col"><div class="bar" style="height:55px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">11k</span><span class="bar-label">24路</span></div>
+          <div class="bar-col"><div class="bar" style="height:50px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">10k</span><span class="bar-label">253</span></div>
+          <div class="bar-col"><div class="bar" style="height:45px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">9k</span><span class="bar-label">K31</span></div>
+          <div class="bar-col"><div class="bar" style="height:40px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">9k</span><span class="bar-label">47路</span></div>
+          <div class="bar-col"><div class="bar" style="height:38px;background:linear-gradient(0deg,#0891b2,#00d4ff)"></div><span class="bar-value">8k</span><span class="bar-label">100</span></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Time flow line chart -->
+    <article class="chart-panel">
+      <p class="eyebrow">全天客流时段分布</p>
+      <h3>人次 / 小时</h3>
+      <div class="chart-area">
+        <div class="line-chart">
+          <svg class="line-svg" viewBox="0 0 400 160">
+            <defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(0,212,255,0.3)"/><stop offset="100%" stop-color="rgba(0,212,255,0)"/></linearGradient></defs>
+            <polygon points="0,140 30,130 60,80 90,40 120,60 150,45 180,50 210,70 240,80 270,100 300,120 330,135 360,140 400,140" fill="url(#areaGrad)"/>
+            <polyline points="0,140 30,130 60,80 90,40 120,60 150,45 180,50 210,70 240,80 270,100 300,120 330,135 360,140 400,140" fill="none" stroke="#00d4ff" stroke-width="3"/>
+            <text x="55" y="75" fill="#00d4ff" font-size="10">早高峰</text>
+            <text x="175" y="42" fill="#00d4ff" font-size="10">晚高峰</text>
+            <line x1="0" y1="155" x2="400" y2="155" stroke="#1a3a5c" stroke-dasharray="4"/>
+            <text x="0" y="13" fill="#7ab3d0" font-size="9">0h</text><text x="85" y="13" fill="#7ab3d0" font-size="9">6h</text><text x="170" y="13" fill="#7ab3d0" font-size="9">12h</text><text x="260" y="13" fill="#7ab3d0" font-size="9">18h</text><text x="355" y="13" fill="#7ab3d0" font-size="9">24h</text>
+          </svg>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Top stations horizontal bar -->
+    <article class="chart-panel">
+      <p class="eyebrow">热门站点客流排行</p>
+      <h3>TOP 8</h3>
+      <div class="chart-area">
+        <div class="hbar-row"><span class="hbar-label">昆明南站</span><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">35k</span></div>
+        <div class="hbar-row"><span class="hbar-label">昆明站</span><div class="hbar-track"><div class="hbar-fill" style="width:91%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">32k</span></div>
+        <div class="hbar-row"><span class="hbar-label">南屏街东口</span><div class="hbar-track"><div class="hbar-fill" style="width:86%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">31k</span></div>
+        <div class="hbar-row"><span class="hbar-label">东风广场</span><div class="hbar-track"><div class="hbar-fill" style="width:79%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">28k</span></div>
+        <div class="hbar-row"><span class="hbar-label">滇池大坝</span><div class="hbar-track"><div class="hbar-fill" style="width:75%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">28k</span></div>
+        <div class="hbar-row"><span class="hbar-label">海埂公园</span><div class="hbar-track"><div class="hbar-fill" style="width:70%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">25k</span></div>
+        <div class="hbar-row"><span class="hbar-label">金马坊</span><div class="hbar-track"><div class="hbar-fill" style="width:64%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">24k</span></div>
+        <div class="hbar-row"><span class="hbar-label">斗南花市</span><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:linear-gradient(90deg,#0891b2,#00d4ff)"></div></div><span class="hbar-value">21k</span></div>
+      </div>
+    </article>
+
+    <!-- 4. Route type pie -->
+    <article class="chart-panel">
+      <p class="eyebrow">线路类型占比</p>
+      <h3>10 条线路</h3>
+      <div class="chart-area">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#00d4ff" stroke-width="30" stroke-dasharray="157 314" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#3b82f6" stroke-width="30" stroke-dasharray="94 314" stroke-dashoffset="-157" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#8b5cf6" stroke-width="30" stroke-dasharray="63 314" stroke-dashoffset="-251" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#f97316" stroke-width="30" stroke-dasharray="47 314" stroke-dashoffset="-314" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="30" fill="#0a1628"/>
+          </svg>
+          <div class="pie-legend">
+            <div class="pie-item"><span class="pie-dot" style="background:#00d4ff"></span>常规公交 (4)</div>
+            <div class="pie-item"><span class="pie-dot" style="background:#3b82f6"></span>旅游接驳 (2)</div>
+            <div class="pie-item"><span class="pie-dot" style="background:#8b5cf6"></span>景区接驳 (2)</div>
+            <div class="pie-item"><span class="pie-dot" style="background:#f97316"></span>旅游专线 (1)</div>
+            <div class="pie-item"><span class="pie-dot" style="background:#16a34a"></span>快线接驳 (1)</div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>
+</body>
+</html>
