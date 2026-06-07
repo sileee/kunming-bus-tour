@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "installCommand": "cd frontend && npm install && cd ../backend && npm install",
+  "buildCommand": "cd frontend && npx vite build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/express" }
+  ],
+  "functions": {
+    "api/express.js": {
+      "includeFiles": "backend/**"
+    }
+  }
+}
