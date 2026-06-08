@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import * as echarts from 'echarts';
-import { api } from '../api';
+import { api, downloadMockCsv } from '../api';
 import type { BusRoute, CollectionSample, CollectionSummary } from '../types';
 
 const props = defineProps<{
@@ -41,6 +41,10 @@ const visibleMessage = computed(() => props.collectorMessage || message.value);
 function triggerMetricPulse(key: 'count' | 'speed' | 'loadRate') {
   metricsChanged.value[key] = true;
   setTimeout(() => { metricsChanged.value[key] = false; }, 600);
+}
+
+async function exportCsv() {
+  try { await downloadMockCsv(); } catch { /* ignore */ }
 }
 
 async function loadCollection() {
@@ -224,7 +228,7 @@ watch(() => props.routes, () => {
         <h2>最近采集记录</h2>
         <div class="title-actions">
           <span>每 2 秒刷新</span>
-          <a :href="api.exportSamplesCsv()" download class="export-btn">导出 CSV</a>
+          <a href="#" @click.prevent="exportCsv" class="export-btn">导出 CSV</a>
         </div>
       </div>
       <div class="admin-table">
