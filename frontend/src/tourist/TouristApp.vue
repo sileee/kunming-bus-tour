@@ -75,7 +75,7 @@ onMounted(async () => {
 <template>
   <!-- Top Bar -->
   <header class="top-bar">
-    <a href="/landing.html" class="logo" style="text-decoration:none;" title="返回景点导览首页">
+    <a href="/" class="logo" style="text-decoration:none;" title="返回首页">
       <span class="logo-icon">KM</span>
       <span>昆明公交旅游导览</span>
     </a>
@@ -147,7 +147,7 @@ onMounted(async () => {
 
   <!-- Footer -->
   <footer class="scrap-footer">
-    <a href="/landing.html" class="back-btn" style="margin-right:16px;">🏠 返回景点导览首页</a>
+    <a href="/" class="back-btn" style="margin-right:16px;">🏠 返回首页</a>
     <span class="dash-arrow">→</span> 点击景点卡片展开游玩攻略 | 点击巴士按钮查询公交线路 | 12 个景点 · 10 条公交线路
   </footer>
 </template>
