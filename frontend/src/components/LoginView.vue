@@ -73,11 +73,7 @@ async function handleLogin() {
           {{ busy ? '登录中...' : '登 录' }}
         </button>
       </form>
-      <p class="login-hint">
-        默认账号：admin / admin123<br/>
-        可在 backend/.env 中修改
-      </p>
-    </div>
+          </div>
   </div>
 </template>
 
