@@ -2,13 +2,14 @@
 
 > 课设项目 · 公交路线数据可视化 · 前后端分离 + 纯静态部署
 >
-> V5.1 | 2026-06 | 线上地址：`kunming-bus-tour-om27p1wk.edgeone.cool`
+> V5.1 | 2026-06 | 自定义域名：`www.kunming-bus-tour.top`
 
 ---
 
 ## 目录
 
 - [项目长什么样](#项目长什么样)
+- [线上访问地址](#线上访问地址)
 - [数据怎么动的](#数据怎么动的)
 - [整体是怎么跑的](#整体是怎么跑的)
 - [技术栈](#技术栈)
@@ -40,6 +41,18 @@
 | 管理员 | 登录后：运营总览、可视大屏、动态地图、线路 CRUD、数据采集、ECharts 分析 | `/admin.html`（角落云朵图标） |
 
 **游客不需要注册**。手绘风格的设计是为了让普通游客打开网页就能逛——点景点卡片有完整游玩攻略（怎么玩、能体验什么、最佳时节），点线路知道坐哪路车。跟后台的科技暗色风格完全区分开来。
+
+---
+
+## 线上访问地址
+
+| 类型 | 地址 | 用途 |
+|------|------|------|
+| 自定义域名（主地址） | `https://www.kunming-bus-tour.top` | 课设展示与对外访问，Cloudflare Pages 托管 |
+| Cloudflare 默认域名 | `https://kunming-bus-tour.pages.dev` | 自动部署预览与 DNS 备用访问 |
+| EdgeOne 备用地址 | `https://kunming-bus-tour-om27p1wk.edgeone.cool` | 国内网络备用演示地址 |
+
+当前线上版本采用纯静态部署：前端页面由 Cloudflare Pages / EdgeOne Pages 托管，生产环境通过浏览器端 `mockApi.ts` 提供同名 API 数据，用于无服务器环境下完整演示游客端、管理端、采集联动和图表分析。
 
 ---
 
@@ -197,7 +210,16 @@ npm run dev          # http://localhost:5173
 
 ### 线上部署
 
-代码推到 GitHub → EdgeOne Pages 自动构建和部署。需要 `edgeone.json`：
+代码推到 GitHub 后，由 Cloudflare Pages 自动构建并部署。Cloudflare Pages 配置如下：
+
+| 配置项 | 值 |
+|------|------|
+| Production branch | `main` |
+| Build command | `cd frontend && npm install && npm run build` |
+| Build output directory | `frontend/dist` |
+| Custom domain | `www.kunming-bus-tour.top` |
+
+同时保留 EdgeOne Pages 配置，便于国内网络备用演示。EdgeOne 需要 `edgeone.json`：
 
 ```json
 {
@@ -256,7 +278,7 @@ npm run dev          # http://localhost:5173
 
 | 阶段 | 验收点 | 操作路径 | 预期结果 |
 |------|--------|----------|----------|
-| 1 | 线上静态首页 | 访问 EdgeOne Pages 线上地址 `/` | 首屏展示手绘景点导览页，无登录门槛，无接口报错 |
+| 1 | 线上静态首页 | 访问 `https://www.kunming-bus-tour.top/` | 首屏展示手绘景点导览页，无登录门槛，无接口报错 |
 | 2 | 游客导览能力 | 浏览景点卡片、展开景点攻略、切换美食区域 | 可查看 12 个景点、4 条推荐线路、8 道本地美食，游客端不出现管理功能 |
 | 3 | 管理端入口隔离 | 点击首页角落云朵图标，或直接访问 `/admin.html` | 进入管理员登录页，证明游客端与管理端入口分离 |
 | 4 | 认证与后台总览 | 完成管理员登录，进入运营总览 | 展示线路、站点、景点、动态客流等 KPI 指标和线路热度排行 |
@@ -264,7 +286,7 @@ npm run dev          # http://localhost:5173
 | 6 | 可视化联动 | 切换到“数据分析”和“可视化大屏” | ECharts 图表、排行、KPI 指标随采集数据刷新，体现数据驱动闭环 |
 | 7 | 地图展示能力 | 打开“动态地图”页面并查看线路/景点 | 公交线路、站点、景点标注和地图动效正常展示 |
 | 8 | 主题与体验完整性 | 切换明暗主题，再返回游客端首页 | 管理端主题切换正常，游客端和管理端视觉风格保持区分 |
-| 9 | EdgeOne 部署验证 | 确认线上无需启动 Express 后端 | 生产环境由 `mockApi.ts` 在浏览器端提供同名接口，页面刷新后仍可运行 |
+| 9 | 静态部署验证 | 确认线上无需启动 Express 后端 | 生产环境由 `mockApi.ts` 在浏览器端提供同名接口，页面刷新后仍可运行 |
 
 ---
 
@@ -280,16 +302,17 @@ npm run dev          # http://localhost:5173
 | V3.1-V3.2 | 优化模型与展示效果 | 升级 Gravity Model v2，引入时段、节假日、距离衰减、空间竞争等参数；完善高德真实路线和主题切换 | 数据变化更接近真实交通调度场景，演示稳定性提升 |
 | V4.0 | 拆分游客端体验 | 新增 `tourist.html` 和 `frontend/src/tourist/`，游客端采用手绘 scrapbook 风格，管理端保持数据大屏风格 | 游客浏览路径和后台管理路径分离，避免普通用户看到管理控件 |
 | V5.0 | 完成权限隔离 | 新增 JWT 登录认证、管理员路由保护、登录态持久化和退出登录能力 | 管理接口需要 Token，游客端无需登录即可浏览 |
-| V5.1 | 适配腾讯云 EdgeOne Pages 静态部署 | 首页改为手绘景点导览页，管理员入口迁移至 `/admin.html`；新增 `mockApi.ts`，生产环境无后端时由浏览器端 Mock API 提供同名接口；清理敏感配置和无关交付物 | EdgeOne Pages 可直接部署访问，游客端、管理端、数据采集和可视化联动均可在线演示 |
+| V5.1 | 适配静态边缘部署 | 首页改为手绘景点导览页，管理员入口迁移至 `/admin.html`；新增 `mockApi.ts`，生产环境无后端时由浏览器端 Mock API 提供同名接口；清理敏感配置和无关交付物；接入 Cloudflare Pages 自定义域名 | `www.kunming-bus-tour.top`、Cloudflare 默认域名和 EdgeOne 备用地址均可访问，游客端、管理端、数据采集和可视化联动均可在线演示 |
 
 **当前生产部署形态**：
 
 ```text
-EdgeOne Pages 静态托管
-    ├── /              手绘景点导览首页
-    ├── /tourist.html  游客导览页
-    ├── /admin.html    管理端入口
-    └── mockApi.ts     浏览器端模拟后端接口
+Cloudflare Pages / EdgeOne Pages 静态托管
+    ├── www.kunming-bus-tour.top  自定义域名主入口
+    ├── /                         手绘景点导览首页
+    ├── /tourist.html             游客导览页
+    ├── /admin.html               管理端入口
+    └── mockApi.ts                浏览器端模拟后端接口
 ```
 
 **可扩展生产形态**：
@@ -308,4 +331,4 @@ MySQL / 云数据库
 
 > 源码：[github.com/sileee/kunming-bus-tour](https://github.com/sileee/kunming-bus-tour)
 >
-> 部署：EdgeOne Pages（腾讯云） · 前端 Vue 3 + Vite · 后端 Express（本地）/ 浏览器 Mock（生产） · 地图 高德 JSAPI
+> 部署：Cloudflare Pages（自定义域名）/ EdgeOne Pages（备用） · 前端 Vue 3 + Vite · 后端 Express（本地）/ 浏览器 Mock（生产） · 地图 高德 JSAPI
