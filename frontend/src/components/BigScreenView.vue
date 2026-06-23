@@ -184,12 +184,16 @@ function disposeRouteTypeChart() {
 
 function renderCharts() {
   disposeCharts();
-  const axisColor = 'rgba(219, 234, 254, 0.68)';
-  const gridColor = 'rgba(148, 163, 184, 0.16)';
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const axisColor = isDark ? 'rgba(219, 234, 254, 0.68)' : '#64748B';
+  const gridColor = isDark ? 'rgba(148, 163, 184, 0.16)' : '#E2E8F0';
+  const bgColor = isDark ? 'rgba(3, 7, 18, 0.92)' : '#FFFFFF';
+  const textColor = isDark ? '#eef6ff' : '#0F172A';
   const tooltip = {
-    backgroundColor: 'rgba(3, 7, 18, 0.92)',
-    borderColor: 'rgba(125, 211, 252, 0.35)',
-    textStyle: { color: '#eef6ff' },
+    backgroundColor: bgColor,
+    borderColor: isDark ? 'rgba(125, 211, 252, 0.35)' : '#E2E8F0',
+    textStyle: { color: textColor },
+    extraCssText: isDark ? '' : 'box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-radius: 10px;',
   };
 
   if (flowTrendEl.value) {
@@ -233,23 +237,24 @@ function renderCharts() {
 function renderRouteTypeChart() {
   if (!routeTypeEl.value) return;
   disposeRouteTypeChart();
-  const axisColor = 'rgba(219, 234, 254, 0.68)';
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const axisColor = isDark ? 'rgba(219, 234, 254, 0.68)' : '#64748B';
   const tooltip = {
-    backgroundColor: 'rgba(3, 7, 18, 0.92)',
-    borderColor: 'rgba(125, 211, 252, 0.35)',
-    textStyle: { color: '#eef6ff' },
+    backgroundColor: isDark ? 'rgba(3, 7, 18, 0.92)' : '#FFFFFF',
+    borderColor: isDark ? 'rgba(125, 211, 252, 0.35)' : '#E2E8F0',
+    textStyle: { color: isDark ? '#eef6ff' : '#0F172A' },
   };
   routeTypeChart = echarts.init(routeTypeEl.value, null, { renderer: 'canvas' });
   routeTypeChart.setOption({
     tooltip: { trigger: 'item', ...tooltip },
-    color: ['#22d3ee', '#f97316', '#a78bfa', '#34d399', '#f43f5e', '#facc15'],
+    color: ['#3B82F6', '#F97316', '#6366F1', '#38A169', '#EF4444', '#EAB308'],
     series: [{
       type: 'pie',
       radius: ['54%', '74%'],
       center: ['50%', '50%'],
       animation: false,
       label: { color: axisColor, formatter: '{b}\n{d}%', fontSize: 10 },
-      labelLine: { lineStyle: { color: 'rgba(224, 242, 254, 0.35)' } },
+      labelLine: { lineStyle: { color: isDark ? 'rgba(224, 242, 254, 0.35)' : '#CBD5E1' } },
       data: routeTypeStats.value,
     }],
   });
