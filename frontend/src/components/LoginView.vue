@@ -107,16 +107,16 @@ onUnmounted(() => {
   min-height: 100vh;
   padding: 24px;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(124,58,237,0.06), transparent 60%),
-    radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.04), transparent 50%),
+    radial-gradient(ellipse at 50% 30%, rgba(59,130,246,0.05), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(99,102,241,0.03), transparent 50%),
     var(--bg-base);
 }
 .login-card {
   width: 100%;
   max-width: 420px;
   background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
-  border-radius: 20px;
+  border: none;
+  border-radius: 24px;
   padding: 40px 36px;
   box-shadow: var(--shadow-elevated);
 }
@@ -224,7 +224,7 @@ onUnmounted(() => {
   transition: all 0.25s var(--ease-expo);
 }
 .login-submit:hover:not(:disabled) {
-  box-shadow: var(--shadow-btn-primary-hover), 0 0 30px rgba(124, 58, 237, 0.25);
+  box-shadow: var(--shadow-btn-primary-hover), 0 0 30px rgba(59,130,246,0.25);
   transform: translateY(-2px);
 }
 </style>
