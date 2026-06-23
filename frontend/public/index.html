@@ -3,759 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>乘着公交游昆明 · Kunming Bus Tour</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>昆明旅游景点导览 · 乘着公交游昆明</title>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
 <style>
-/* ===== Claymorphism Design System ===== */
 :root {
-  --bg: #f3f0ff;
-  --bg-card: #faf8ff;
-  --primary: #7C3AED;
-  --primary-light: #A78BFA;
-  --primary-soft: #EDE9FE;
-  --accent: #C084FC;
-  --text: #2e1a4a;
-  --text-muted: #7a6b8f;
-  --shadow-sm: inset 0 -2px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(124,58,237,0.08);
-  --shadow-md: inset 0 -4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(124,58,237,0.10), 0 0 0 1px rgba(124,58,237,0.06);
-  --shadow-lg: inset 0 -6px 12px rgba(0,0,0,0.08), 0 20px 48px rgba(124,58,237,0.14), 0 0 0 1px rgba(124,58,237,0.08);
-  --shadow-pressed: inset 0 4px 8px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.04);
-  --radius-sm: 16px;
-  --radius-md: 24px;
-  --radius-lg: 32px;
-  --radius-full: 9999px;
-  --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --paper: #fdfbf7; --pencil: #2d2d2d; --muted: #e5e0d8;
+  --red: #ff4d4d; --blue: #2d5da1; --yellow: #fff9c4; --green: #2d8a56;
+  --wobbly: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --wobblyMd: 185px 28px 160px 22px / 25px 180px 18px 195px;
+  --wobblySm: 120px 12px 100px 10px / 10px 100px 8px 120px;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Nunito', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
-  background:
-    radial-gradient(ellipse at 30% 0%, #EDE9FE 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 100%, #F5F0FF 0%, transparent 50%),
-    var(--bg);
-  color: var(--text);
-  line-height: 1.65;
-  min-height: 100vh;
+  font-family: 'Patrick Hand', cursive;
+  background-color: var(--paper);
+  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+  background-size: 26px 26px;
+  color: var(--pencil); line-height: 1.7; min-height: 100vh;
 }
 
-/* ===== Top Bar ===== */
 .top-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 28px; gap: 16px; flex-wrap: wrap;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  padding: 20px 28px; border-bottom: 3px dashed var(--pencil);
   position: sticky; top: 0; z-index: 50;
-  background: rgba(243,240,255,0.85); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(124,58,237,0.08);
+  background: rgba(253,251,247,0.92); backdrop-filter: blur(6px);
 }
-.logo {
-  display: flex; align-items: center; gap: 12px;
-  font-weight: 800; font-size: 22px; color: var(--primary);
-  text-decoration: none;
+.logo { display: flex; align-items: center; gap: 12px; font-family: 'Kalam', cursive; font-size: 28px; }
+.logo-icon { width: 48px; height: 48px; background: var(--yellow); border: 3px solid var(--pencil); border-radius: var(--wobblySm); display: grid; place-items: center; font-size: 24px; box-shadow: 3px 3px 0px 0px var(--pencil); }
+.bus-btn {
+  display: flex; align-items: center; gap: 8px; padding: 12px 22px;
+  font-family: 'Patrick Hand', cursive; font-size: 18px; background: #fff;
+  border: 3px solid var(--pencil); border-radius: var(--wobblySm);
+  box-shadow: 4px 4px 0px 0px var(--pencil); cursor: pointer;
+  transition: all 0.15s ease; text-decoration: none; color: var(--pencil);
 }
-.logo-icon {
-  width: 44px; height: 44px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff; border-radius: var(--radius-sm);
-  display: grid; place-items: center;
-  font-size: 20px; font-weight: 800;
-  box-shadow: var(--shadow-md);
-}
-.logo-icon::after {
-  content: ''; position: absolute; inset: 4px; border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 60%);
-  pointer-events: none;
-}
+.bus-btn:hover { background: var(--red); color: #fff; box-shadow: 2px 2px 0px 0px var(--pencil); transform: translate(2px, 2px); }
+.bus-btn:active { box-shadow: 0px 0px 0px 0px var(--pencil); transform: translate(4px, 4px); }
 
-/* clay button */
-.clay-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 24px;
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  background: #fff; color: var(--primary);
-  border: none; border-radius: var(--radius-full);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer; transition: all 0.25s var(--ease);
-  text-decoration: none; position: relative;
-}
-.clay-btn::after {
-  content: ''; position: absolute; inset: 3px; border-radius: 9999px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 40%);
-  pointer-events: none;
-}
-.clay-btn:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-.clay-btn:active {
-  box-shadow: var(--shadow-pressed);
-  transform: scale(0.97);
-}
-.clay-btn.primary {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff;
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.10), 0 8px 24px rgba(124,58,237,0.25);
-}
-.clay-btn.primary:hover {
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.12), 0 12px 32px rgba(124,58,237,0.35);
-}
+.hero { text-align: center; padding: 48px 24px 32px; }
+.hero h1 { font-family: 'Kalam', cursive; font-size: 52px; line-height: 1.2; position: relative; display: inline-block; }
+.hero h1 .bounce { display: inline-block; animation: bounce-mark 1.6s ease-in-out infinite; color: var(--red); }
+@keyframes bounce-mark { 0%,100%{transform:translateY(0)rotate(0deg)} 30%{transform:translateY(-14px)rotate(-6deg)} 60%{transform:translateY(0)rotate(3deg)} }
+.hero p { font-size: 20px; color: #555; max-width: 650px; margin: 12px auto 0; }
+.hero .squiggle { display: block; margin: 8px auto 0; width: 180px; height: 18px; }
 
-/* ===== Hero ===== */
-.hero {
-  text-align: center; padding: 64px 24px 48px; position: relative;
-}
-.hero-badge {
-  display: inline-block; padding: 6px 18px;
-  background: var(--primary-soft); color: var(--primary);
-  font-size: 13px; font-weight: 700; border-radius: var(--radius-full);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 20px;
-}
-.hero h1 {
-  font-size: clamp(36px, 6vw, 56px); font-weight: 800;
-  line-height: 1.2; margin-bottom: 16px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero h1 .emoji { -webkit-text-fill-color: initial; display: inline-block; animation: float-emoji 2s ease-in-out infinite; }
-@keyframes float-emoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-.hero p {
-  font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 28px;
-}
-.hero-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.section-title { text-align: center; padding: 40px 24px 16px; }
+.section-title h2 { font-family: 'Kalam', cursive; font-size: 38px; position: relative; display: inline-block; }
+.section-title h2::after { content: ''; display: block; width: 60%; height: 4px; background: var(--yellow); margin: 6px auto 0; border-radius: 2px; }
 
-/* ===== Progress Tracker ===== */
-.progress-tracker {
-  max-width: 700px; margin: 0 auto 48px; padding: 0 24px;
-}
-.progress-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 24px 28px;
-  box-shadow: var(--shadow-md);
-}
-.progress-header {
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-}
-.progress-header h3 { font-size: 16px; font-weight: 700; color: var(--text); }
-.progress-header span { font-size: 14px; font-weight: 600; color: var(--primary); }
-.progress-bar-wrap {
-  height: 12px; background: var(--primary-soft); border-radius: var(--radius-full);
-  overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
-}
-.progress-bar-fill {
-  height: 100%; border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-  transition: width 1.5s var(--ease);
-  width: 0;
-}
-.progress-bar-fill.animate { width: 67%; }
-.progress-labels {
-  display: flex; justify-content: space-between; margin-top: 8px;
-  font-size: 12px; color: var(--text-muted); font-weight: 600;
-}
-
-/* ===== Section Title ===== */
-.section-title {
-  text-align: center; padding: 40px 24px 16px;
-}
-.section-title .tag {
-  display: inline-block; padding: 4px 14px;
-  background: var(--primary-soft); color: var(--primary);
-  font-size: 12px; font-weight: 700; border-radius: var(--radius-full);
-  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em;
-}
-.section-title h2 {
-  font-size: 32px; font-weight: 800; color: var(--text);
-}
-.section-title p { color: var(--text-muted); font-size: 15px; margin-top: 4px; }
-
-/* ===== Spots Grid (Course Cards) ===== */
 .spots-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px; padding: 24px 28px; max-width: 1340px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 28px; padding: 24px 28px; max-width: 1340px; margin: 0 auto;
 }
 
-/* Claymorphism card */
 .spot-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 0;
-  box-shadow: var(--shadow-sm); cursor: pointer;
-  transition: all 0.35s var(--ease); position: relative; overflow: hidden;
+  background: #fff; border: 3px solid var(--pencil); border-radius: var(--wobblyMd);
+  box-shadow: 5px 5px 0px 0px rgba(45,45,45,0.12); overflow: hidden;
+  transition: all 0.2s ease; cursor: pointer; position: relative;
 }
-.spot-card:hover {
-  box-shadow: var(--shadow-lg); transform: translateY(-6px);
-}
-.spot-card.featured {
-  box-shadow: inset 0 -2px 4px rgba(124,58,237,0.06), 0 8px 24px rgba(124,58,237,0.12), 0 0 0 2px rgba(124,58,237,0.08);
-}
-.spot-img {
-  width: 100%; height: 170px; object-fit: cover;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: var(--primary-soft);
-}
-.spot-body { padding: 20px 22px; }
-.spot-body h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-.spot-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.spot-tag {
-  display: inline-block; padding: 3px 10px; font-size: 12px; font-weight: 600;
-  border-radius: var(--radius-full); background: var(--primary-soft); color: var(--primary);
-  box-shadow: inset 0 -1px 2px rgba(0,0,0,0.04);
-}
-.tag-district { background: #EDE9FE; color: #7C3AED; }
-.tag-type { background: #E8F5E9; color: #2E7D32; }
-.tag-rating { background: #FFF3E0; color: #E65100; }
-.spot-body > p { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+.spot-card:hover { box-shadow: 7px 7px 0px 0px rgba(45,45,45,0.18); transform: rotate(-0.6deg) translateY(-2px); }
+.spot-card.featured { border-color: var(--red); box-shadow: 5px 5px 0px 0px rgba(255,77,77,0.2); }
+.spot-card:nth-child(odd) { transform: rotate(0.4deg); }
+.spot-card:nth-child(odd):hover { transform: rotate(-0.4deg) translateY(-2px); }
+.spot-card:nth-child(3n) { transform: rotate(-0.3deg); }
+.spot-card:nth-child(3n):hover { transform: rotate(0.4deg) translateY(-2px); }
+
+.spot-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 3px dashed var(--pencil); background: var(--muted); }
+.spot-body { padding: 18px 20px; }
+.spot-body h3 { font-family: 'Kalam', cursive; font-size: 24px; margin-bottom: 4px; }
+.spot-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.spot-tag { display: inline-block; padding: 4px 12px; border: 2px solid var(--pencil); border-radius: var(--wobblySm); font-size: 14px; }
+.tag-district { background: #fff; } .tag-type { background: var(--yellow); } .tag-rating { background: #fff; color: var(--red); font-weight: 700; }
+.spot-body p { font-size: 16px; color: #555; margin-bottom: 12px; }
 
 .route-hint {
-  padding: 10px 14px; border-radius: var(--radius-sm);
-  background: var(--primary-soft);
-  font-size: 13px; font-weight: 600; color: var(--primary);
-  margin-top: 8px;
-  box-shadow: inset 0 -1px 2px rgba(0,0,0,0.04);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 14px;
+  background: var(--yellow); border: 2px dashed var(--pencil); border-radius: var(--wobblySm); font-size: 15px; margin-top: 8px;
 }
-.route-hint strong { color: #6D28D9; }
+.route-hint strong { color: var(--red); }
 
-.location-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 10px 18px; margin-top: 12px;
-  font-family: inherit; font-size: 14px; font-weight: 700;
-  background: #fff; color: var(--primary);
-  border: none; border-radius: var(--radius-full);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer; text-decoration: none;
-  transition: all 0.25s var(--ease);
-}
-.location-btn:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-.collapse-hint {
-  display: block; text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 8px;
-}
-
-/* Expanded card */
 .spot-card.expanded {
-  grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr;
-  max-width: 900px; margin: 0 auto;
+  grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; max-width: 960px; margin: 0 auto;
 }
-.spot-card.expanded .spot-img { height: 100%; min-height: 350px; border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
-.spot-card.expanded .spot-body { padding: 24px 28px; overflow-y: auto; max-height: 500px; }
-.spot-card.expanded .spot-body h3 { font-size: 28px; }
+.spot-card.expanded .spot-img { height: 100%; min-height: 380px; }
+.spot-card.expanded .spot-body { padding: 24px 28px; overflow-y: auto; max-height: 520px; }
+.spot-card.expanded .spot-body h3 { font-size: 32px; }
 .spot-card .detail-extra { display: none; }
 .spot-card.expanded .detail-extra { display: block; }
+.spot-card .collapse-hint { display: block; text-align: center; color: #999; font-size: 13px; margin-top: 6px; }
 
-.guide-section {
-  margin-top: 14px; padding: 14px 16px; border-radius: var(--radius-sm);
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.04); font-size: 14px;
-}
-.guide-section h4 { font-weight: 700; margin-bottom: 4px; font-size: 15px; }
-.guide-section p { font-size: 13px !important; color: var(--text-muted); margin: 0 !important; }
-.guide-play { background: #F3F0FF; }
-.guide-play h4 { color: #7C3AED; }
-.guide-exp { background: #FFF0F6; }
-.guide-exp h4 { color: #D63384; }
-.guide-time { background: #FFF9E6; }
-.guide-time h4 { color: #E65100; }
+.guide-section { margin-top: 14px; padding: 12px 14px; border-radius: var(--wobblySm); }
+.guide-section h4 { font-family: 'Kalam', cursive; font-size: 18px; margin-bottom: 4px; }
+.guide-section p { font-size: 15px !important; color: #555; line-height: 1.7; margin: 0 !important; }
+.guide-play { background: #f0fdf4; border: 2px dashed var(--green); }
+.guide-play h4 { color: var(--green); }
+.guide-exp { background: #eff6ff; border: 2px dashed var(--blue); }
+.guide-exp h4 { color: var(--blue); }
+.guide-time { background: #fff7ed; border: 2px dashed #ea580c; }
+.guide-time h4 { color: #ea580c; }
 
 .close-btn {
-  position: absolute; top: 14px; right: 14px; width: 32px; height: 32px;
-  border-radius: 50%; background: #fff; border: none; font-size: 16px;
-  box-shadow: var(--shadow-sm); cursor: pointer; z-index: 2;
-  display: none;
+  position: absolute; top: 12px; right: 16px; width: 36px; height: 36px;
+  border: 3px solid var(--pencil); border-radius: 50%; background: #fff;
+  font-family: 'Patrick Hand', cursive; font-size: 20px; cursor: pointer;
+  display: none; z-index: 2; box-shadow: 3px 3px 0px 0px var(--pencil);
 }
 .spot-card.expanded .close-btn { display: grid; place-items: center; }
 
-/* ===== Tour Routes (Progress Timeline) ===== */
-.tour-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px;
-  padding: 20px 28px 32px; max-width: 1000px; margin: 0 auto;
+.location-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; margin-top: 10px;
+  font-family: 'Patrick Hand', cursive; font-size: 16px; background: #fff;
+  border: 3px solid var(--pencil); border-radius: var(--wobblySm);
+  box-shadow: 4px 4px 0px 0px var(--pencil); cursor: pointer;
+  transition: all 0.15s ease; text-decoration: none; color: var(--pencil);
 }
+.location-btn:hover { background: var(--blue); color: #fff; box-shadow: 2px 2px 0px 0px var(--pencil); transform: translate(2px, 2px); }
+
+.tour-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; padding: 20px 28px 32px; max-width: 1000px; margin: 0 auto; }
 .tour-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 24px;
-  box-shadow: var(--shadow-sm); transition: all 0.35s var(--ease);
-  position: relative; overflow: hidden;
+  background: #fff; border: 3px solid var(--pencil); border-radius: var(--wobblyMd);
+  box-shadow: 5px 5px 0px 0px rgba(45,45,45,0.1); padding: 20px 22px;
+  transition: all 0.2s ease; position: relative; overflow: hidden;
 }
-.tour-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
-.tour-card .tour-icon { font-size: 40px; margin-bottom: 12px; display: block; }
-.tour-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-.tour-card .tour-stops { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; align-items: center; }
-.tour-card .tour-stop {
-  padding: 4px 12px; background: var(--primary-soft); color: var(--primary);
-  border-radius: var(--radius-full); font-size: 13px; font-weight: 600;
-  box-shadow: inset 0 -1px 2px rgba(0,0,0,0.04);
-}
-.tour-card .tour-arrow { color: var(--accent); font-weight: 700; font-size: 16px; }
-.tour-card p { font-size: 14px; color: var(--text-muted); }
-.tour-card .tour-bus {
-  display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
-  padding: 6px 14px; background: var(--primary-soft); color: var(--primary);
-  border-radius: var(--radius-full); font-size: 13px; font-weight: 700;
-}
-.tour-card::before {
-  content: ''; position: absolute; top: 0; right: 0; width: 100px; height: 100px;
-  border-radius: 0 var(--radius-lg) 0 100%;
-  background: radial-gradient(circle at 100% 0%, var(--primary-soft), transparent 70%);
-  pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
-}
-.tour-card:hover::before { opacity: 1; }
+.tour-card::before { content: ''; position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; opacity: 0.20; transition: opacity 0.3s ease; }
+.tour-card:hover::before { opacity: 0.35; }
+.tour-card > * { position: relative; z-index: 1; }
+.tour-card.tour-dianchi::before { background-image: url('/spot-real-images/dianchi-west.jpg'); }
+.tour-card.tour-city::before { background-image: url('/spot-real-images/city-walk.jpg'); }
+.tour-card.tour-garden::before { background-image: url('/spot-real-images/expo-garden.jpg'); }
+.tour-card.tour-flower::before { background-image: url('/spot-real-images/dounan-flower.jpg'); }
+.tour-card:hover { transform: rotate(-0.5deg); box-shadow: 7px 7px 0px 0px rgba(45,45,45,0.15); }
+.tour-card:nth-child(odd) { transform: rotate(0.4deg); }
+.tour-card:nth-child(odd):hover { transform: rotate(-0.4deg); }
+.tour-card .tour-icon { font-size: 32px; margin-bottom: 8px; }
+.tour-card h3 { font-family: 'Kalam', cursive; font-size: 22px; margin-bottom: 6px; }
+.tour-card .tour-stops { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.tour-card .tour-stop { padding: 2px 10px; background: var(--yellow); border: 2px solid var(--pencil); border-radius: var(--wobblySm); font-size: 14px; }
+.tour-card .tour-arrow { color: var(--red); font-weight: 700; font-size: 18px; }
+.tour-card p { font-size: 15px; color: #555; }
+.tour-card .tour-bus { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 4px 10px; background: #fef2f2; border: 2px solid var(--red); border-radius: var(--wobblySm); font-size: 14px; color: var(--red); font-weight: 700; }
 
-/* ===== Testimonials ===== */
-.testimonial-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-  padding: 20px 28px 32px; max-width: 1100px; margin: 0 auto;
-}
-.testimonial-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 24px;
-  box-shadow: var(--shadow-sm); transition: all 0.35s var(--ease);
-}
-.testimonial-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.testimonial-card .t-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;
-  margin-bottom: 12px; box-shadow: var(--shadow-sm);
-}
-.testimonial-card .t-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
-.testimonial-card .t-stars { color: #F59E0B; font-size: 14px; margin-bottom: 6px; }
-.testimonial-card .t-name { font-weight: 700; color: var(--text); font-size: 14px; }
-
-/* ===== Food Section ===== */
-.food-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
-  padding: 20px 28px 32px; max-width: 1100px; margin: 0 auto;
-}
+.food-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; padding: 20px 28px 32px; max-width: 1100px; margin: 0 auto; }
 .food-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 20px;
-  box-shadow: var(--shadow-sm); transition: all 0.35s var(--ease); text-align: center;
+  background: var(--yellow); border: 3px solid var(--pencil); border-radius: var(--wobblyMd);
+  box-shadow: 4px 4px 0px 0px rgba(45,45,45,0.1); padding: 18px 20px;
+  transition: all 0.2s ease; position: relative;
 }
-.food-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.food-card .food-emoji {
-  font-size: 40px; display: block; margin-bottom: 10px;
-  width: 60px; height: 60px; line-height: 60px; border-radius: 50%;
-  background: var(--primary-soft); margin: 0 auto 12px;
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.04);
-}
-.food-card h4 { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: var(--text); }
-.food-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-.food-card .food-where {
-  display: inline-block; margin-top: 8px; padding: 3px 10px;
-  background: var(--primary-soft); color: var(--primary);
-  border-radius: var(--radius-full); font-size: 12px; font-weight: 600;
-}
+.food-card:hover { transform: rotate(0.6deg) scale(1.02); box-shadow: 6px 6px 0px 0px rgba(45,45,45,0.15); }
+.food-card .food-emoji { font-size: 36px; }
+.food-card h4 { font-family: 'Kalam', cursive; font-size: 20px; margin: 6px 0 4px; }
+.food-card p { font-size: 15px; color: #555; line-height: 1.6; }
+.food-card .food-where { display: inline-block; margin-top: 6px; padding: 3px 10px; background: #fff; border: 2px solid var(--pencil); border-radius: var(--wobblySm); font-size: 13px; }
 
-/* ===== CTA Section ===== */
-.cta-section {
-  text-align: center; padding: 48px 24px; max-width: 700px; margin: 0 auto;
-}
-.cta-card {
-  background: linear-gradient(135deg, #7C3AED, #A78BFA);
-  border-radius: var(--radius-lg); padding: 48px 32px;
-  box-shadow: inset 0 -6px 12px rgba(0,0,0,0.10), 0 20px 48px rgba(124,58,237,0.25);
-  color: #fff; position: relative; overflow: hidden;
-}
-.cta-card::after {
-  content: ''; position: absolute; inset: 6px; border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
-  pointer-events: none;
-}
-.cta-card > * { position: relative; z-index: 1; }
-.cta-card h2 { font-size: 30px; font-weight: 800; margin-bottom: 12px; }
-.cta-card p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
-.cta-card .clay-btn.cta-white {
-  background: #fff; color: var(--primary);
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
-  font-size: 17px; padding: 14px 32px;
-}
-.cta-card .clay-btn.cta-white:hover { transform: translateY(-3px); box-shadow: inset 0 -2px 4px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.18); }
+.tape { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 90px; height: 28px; background: rgba(200,195,185,0.55); z-index: 3; }
+.tack { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; border-radius: 50%; background: var(--red); border: 2px solid #cc0000; z-index: 3; box-shadow: 1px 2px 0px 0px rgba(0,0,0,0.2); }
 
-/* ===== Footer ===== */
-.footer {
-  text-align: center; padding: 32px 24px;
-  border-top: 1px solid rgba(124,58,237,0.06); font-size: 13px; color: var(--text-muted);
-}
+.footer { text-align: center; padding: 32px 24px; border-top: 3px dashed var(--pencil); font-size: 16px; color: #777; position: relative; }
+.footer .dash-arrow { display: inline-block; margin-right: 6px; animation: dash-bounce 1.4s ease-in-out infinite; }
 
-/* ===== Floating Decorative Bubbles ===== */
-.bg-bubble {
-  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-  filter: blur(80px); opacity: 0.30;
-}
-.bg-bubble-1 { width: 500px; height: 500px; background: #C084FC; top: -200px; left: -100px; animation: drift-1 12s ease-in-out infinite; }
-.bg-bubble-2 { width: 400px; height: 400px; background: #A78BFA; top: 60%; right: -150px; animation: drift-2 14s ease-in-out infinite; }
-.bg-bubble-3 { width: 300px; height: 300px; background: #EDE9FE; bottom: -100px; left: 40%; animation: drift-3 10s ease-in-out infinite; }
-@keyframes drift-1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-30px)} }
-@keyframes drift-2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,20px)} }
-@keyframes drift-3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,15px)} }
-
-/* cloud admin entrance — kept subtle */
 .cloud-top {
-  opacity: 0.18; cursor: pointer; transition: opacity 0.3s ease;
+  animation: cloud-float 6s ease-in-out infinite;
+  cursor: pointer;
+  opacity: 0.22;
+  transition: opacity 0.3s ease;
   flex-shrink: 0;
 }
-.cloud-top:hover { opacity: 0.50; }
-
-@media (max-width: 900px) {
-  .food-grid { grid-template-columns: repeat(2, 1fr); }
-  .testimonial-grid { grid-template-columns: 1fr; }
+.cloud-top:hover { opacity: 0.55; }
+@keyframes cloud-float {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(6px) translateY(-3px); }
+  50% { transform: translateX(-2px) translateY(-6px); }
+  75% { transform: translateX(4px) translateY(-2px); }
 }
+@keyframes dash-bounce { 0%,100%{transform:translateX(0)} 50%{transform:translateX(8px)} }
+
+@media (max-width: 900px) { .food-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) {
-  .hero h1 { font-size: 30px; }
-  .spots-grid, .tour-grid { grid-template-columns: 1fr; padding: 16px; }
+  .hero h1 { font-size: 34px; }
+  .spots-grid, .tour-grid, .food-grid { grid-template-columns: 1fr; padding: 16px; }
   .spot-card.expanded { grid-template-columns: 1fr; }
-  .spot-card.expanded .spot-img { min-height: 200px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-  .food-grid { grid-template-columns: 1fr 1fr; }
+  .spot-card.expanded .spot-img { min-height: 200px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Decorative bubbles -->
-<div class="bg-bubble bg-bubble-1"></div>
-<div class="bg-bubble bg-bubble-2"></div>
-<div class="bg-bubble bg-bubble-3"></div>
-
-<!-- Top Bar -->
 <header class="top-bar">
-  <div class="logo"><span class="logo-icon">KM</span> Kunming Bus Tour</div>
+  <div class="logo"><span class="logo-icon">KM</span><span>昆明旅游景点导览</span></div>
   <a href="/admin.html" class="cloud-top" title="管理员入口">
-    <svg width="44" height="24" viewBox="0 0 44 24"><path d="M8,22 C3,22 0,18 0,13.5 C0,9 3,6 8,6 C9,2.5 13,0 17,0 C21,0 25,1.5 26,5 C27,4 29,3 31,3 C35.5,3 39,7 39,11.5 C39,12.5 38.5,13.5 37.5,14 C40,15 42,17.5 42,20 C42,23 39.5,25 36,25 L8,22 Z" fill="rgba(124,58,237,0.4)" stroke="rgba(124,58,237,0.3)" stroke-width="1.5"/></svg>
+    <svg width="44" height="24" viewBox="0 0 44 24"><path d="M8,22 C3,22 0,18 0,13.5 C0,9 3,6 8,6 C9,2.5 13,0 17,0 C21,0 25,1.5 26,5 C27,4 29,3 31,3 C35.5,3 39,7 39,11.5 C39,12.5 38.5,13.5 37.5,14 C40,15 42,17.5 42,20 C42,23 39.5,25 36,25 L8,22 Z" fill="rgba(200,200,200,0.3)" stroke="rgba(180,180,180,0.4)" stroke-width="1.5"/></svg>
   </a>
-  <a href="/tourist.html" class="clay-btn">
-    🚌 公交线路查询
+  <a href="/tourist.html" class="bus-btn">
+    公交交通线路查询
   </a>
 </header>
 
-<!-- Hero -->
 <section class="hero">
-  <div class="hero-badge">🚌 智慧旅游 · 沉浸式学习体验</div>
-  <h1>乘着公交探索<span class="emoji">🌸</span>昆明</h1>
-  <p>一座车轮上的城市博物馆。12 个景点、10 条线路、4 条精选路线——像翻阅绘本一样游览昆明。</p>
-  <div class="hero-cta-row">
-    <a href="#spots" class="clay-btn primary">🎯 开始探索</a>
-    <a href="#routes" class="clay-btn">📋 查看路线</a>
-  </div>
+  <h1>乘着公交游<span class="bounce">昆明</span></h1>
+  <svg class="squiggle" viewBox="0 0 180 18" fill="none"><path d="M5,10 Q25,2 45,10 Q65,18 85,10 Q105,2 125,10 Q145,18 165,10 Q175,6 178,10" stroke="#ff4d4d" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+  <p>翠湖、滇池、西山、斗南花市…… 12 个昆明代表性景点。<br/>不用注册，打开即用。点击卡片看攻略，点巴士按钮查路线。</p>
 </section>
 
-<!-- Progress Tracker -->
-<section class="progress-tracker">
-  <div class="progress-card">
-    <div class="progress-header">
-      <h3>📊 你的昆明探索进度</h3>
-      <span>8 / 12 景点</span>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill animate"></div>
-    </div>
-    <div class="progress-labels">
-      <span>翠湖、云大、南屏街…</span>
-      <span>还差 4 个解锁完整徽章 🏅</span>
-    </div>
-  </div>
-</section>
-
-<!-- Spots -->
-<div class="section-title" id="spots">
-  <span class="tag">课程目录</span>
-  <h2>热门景点</h2>
-  <p>每个地点都是一堂关于昆明的小课</p>
-</div>
-<section class="spots-grid">
+<div class="section-title"><h2>热门景点</h2></div>
+<section class="spots-grid" id="spots">
 
   <article class="spot-card featured" data-name="翠湖公园">
-    <img class="spot-img" src="/spot-real-images/cuihu.jpg" alt="翠湖公园" onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#C084FC)'">
+    <div class="tape"></div>
+    <img class="spot-img" src="/spot-real-images/cuihu.jpg" alt="翠湖公园" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>翠湖公园</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">五华区</span><span class="spot-tag tag-type">城市公园</span><span class="spot-tag tag-rating">★ 4.8</span></div>
-      <p>昆明主城区代表性公园，冬季红嘴鸥聚集，周边环绕云南大学、陆军讲武堂。</p>
+      <p>昆明主城区代表性公园，冬季红嘴鸥聚集，周边环绕云南大学、陆军讲武堂等历史建筑。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>沿湖畔步道慢行约 1.5 小时，从东门进→绕湖一周→西门出，顺路参观云南大学和陆军讲武堂。湖心岛上的海心亭是拍照最佳位置。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>冬日成千上万红嘴鸥盘旋湖面；春夏季荷花盛开；周边茶馆体验昆明慢生活。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>11月-次年3月（红嘴鸥季）。建议清晨 8 点前人少鸥多。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>沿湖畔步道慢行约 1.5 小时，从东门进→绕湖一周→西门出，顺路参观云南大学和陆军讲武堂。湖心岛上的海心亭是拍照最佳位置。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>冬日成千上万红嘴鸥盘旋湖面，可购买鸥粮投喂；春夏季湖面荷花盛开；周边茶馆可以体验昆明慢生活。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>11月-次年3月（红嘴鸥季）是绝对黄金期。建议清晨8点前人少鸥多。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>100路、2路</strong></div>
-      <a href="/tourist.html?spot=翠湖公园" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>100路、2路</strong></div>
+      <a href="/tourist.html?spot=翠湖公园" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="云南大学">
-    <img class="spot-img" src="/spot-real-images/yunda.jpg" alt="云南大学" onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#A78BFA)'">
+    <img class="spot-img" src="/spot-real-images/yunda.jpg" alt="云南大学" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>云南大学</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">五华区</span><span class="spot-tag tag-type">高校人文</span><span class="spot-tag tag-rating">★ 4.7</span></div>
-      <p>百年学府，银杏大道秋季金黄如画，法式建筑与中国古典园林交相辉映。</p>
+      <p>近代校园建筑与银杏大道形成昆明文旅名片，秋季银杏金黄时节游客如织。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>南门进→银杏道→会泽院（法式建筑）→钟楼→东门出，约 1 小时。银杏道秋天最经典。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>百年学府人文气息，法式建筑与中式园林交融。秋季银杏季有学生手作市集。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>10月下旬-11月中旬（银杏黄叶季）。周末上午光影最好。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>从南门进→银杏道→会泽院（百年法式建筑）→钟楼→东门出，约 1 小时。银杏道秋天铺满金色落叶，是最经典机位。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>百年学府人文气息浓郁，法式建筑与中国古典园林交融；秋季银杏季有学生手作市集；东门出来就是翠湖公园北侧。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>10月下旬-11月中旬（银杏黄叶季）是绝对首选。建议周末上午去，光影最好。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>100路、2路</strong></div>
-      <a href="/tourist.html?spot=云南大学" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>100路、2路</strong></div>
+      <a href="/tourist.html?spot=云南大学" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card featured" data-name="南屏街">
-    <img class="spot-img" src="/spot-real-images/nanping.jpg" alt="南屏街" onerror="this.style.background='linear-gradient(135deg,#F3F0FF,#C084FC)'">
+    <img class="spot-img" src="/spot-real-images/nanping.jpg" alt="南屏街" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>南屏街</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">五华区</span><span class="spot-tag tag-type">商业街区</span><span class="spot-tag tag-rating">★ 4.6</span></div>
-      <p>昆明核心商业步行街，南强街夜市汇集地道小吃，周边隐藏独立咖啡馆与手作文创。</p>
+      <p>昆明核心商业步行街，餐饮、购物和夜游集中，是体验昆明城市生活的最佳入口。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>南屏街东口步行向西→正义路→南强街小吃巷→金马碧鸡坊，全程约 2 小时。傍晚出发最佳。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>昆明最繁华商圈，南强街夜市地道小吃。周边独立咖啡馆和文创店很出片。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>全年皆宜。夜市 7-10 点最热闹。春节期间有大型灯会。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>从南屏街东口步行向西→正义路→南强街小吃巷→金马碧鸡坊，全程约 2 小时。建议傍晚出发逛到天黑看夜景。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>南强街夜市汇集地道小吃；周边老街区有独立咖啡馆和手作文创店；节假日有大型灯会和民俗表演。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>全年皆宜。夜市最佳时间是晚上 7-10 点。春节期间有灯会。雨季（6-8月）建议带伞但人少体验好。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>2路、73路、A1路、47路</strong></div>
-      <a href="/tourist.html?spot=南屏街" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>2路、73路、A1路、47路</strong></div>
+      <a href="/tourist.html?spot=南屏街" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="金马碧鸡坊">
-    <img class="spot-img" src="/spot-real-images/jinma.jpg" alt="金马碧鸡坊" onerror="this.style.background='linear-gradient(135deg,#FFF0F6,#EDE9FE)'">
+    <div class="tack"></div>
+    <img class="spot-img" src="/spot-real-images/jinma.jpg" alt="金马碧鸡坊" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>金马碧鸡坊</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">五华区</span><span class="spot-tag tag-type">历史地标</span><span class="spot-tag tag-rating">★ 4.6</span></div>
-      <p>昆明城市地标，"金碧交辉"奇观传说每 60 年出现一次。黄昏拍摄特别出片。</p>
+      <p>昆明城市地标之一，金马坊与碧鸡坊东西相望，"金碧交辉"传说每 60 年出现一次。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>两坊相距约 300 米，金马坊→碧鸡坊→东寺街老街区。约 1 小时。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>昆明最具标志性历史建筑。周边老街区保留了传统市井生活气息。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>全年皆可。建议和南屏街安排在同一天。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>两坊相距约 300 米，建议从金马坊开始→穿过广场→碧鸡坊→往北进入东寺街老街区。约 1 小时。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>昆明最具标志性的历史建筑。周边老街区保留了传统市井生活气息。黄昏金色夕阳照射坊身非常出片。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>全年皆可。建议和南屏街安排在同一天游览。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>2路、73路、A1路</strong></div>
-      <a href="/tourist.html?spot=金马碧鸡坊" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>2路、73路、A1路</strong></div>
+      <a href="/tourist.html?spot=金马碧鸡坊" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="大观公园">
-    <img class="spot-img" src="/spot-real-images/daguan.jpg" alt="大观公园" onerror="this.style.background='linear-gradient(135deg,#F0FDF4,#EDE9FE)'">
+    <img class="spot-img" src="/spot-real-images/daguan.jpg" alt="大观公园" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>大观公园</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">西山区</span><span class="spot-tag tag-type">城市公园</span><span class="spot-tag tag-rating">★ 4.7</span></div>
-      <p>以大观楼长联闻名，登楼可览西山滇池全景。夏季荷花节美不胜收。</p>
+      <p>以大观楼长联和滇池景观闻名，登楼远眺可览西山滇池全景，夏季荷花盛开美不胜收。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>入园→大观楼（天下第一长联）→乘游船到西山脚下。预留 2-3 小时。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>大观楼长联 180 字，中国最长对联。登楼远眺滇池和西山睡美人。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>6-8 月荷花节最美。春秋天气清爽适合户外。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>入园→大观楼（读天下第一长联）→乘游船到滇池对岸西山脚下。预留 2-3 小时。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>大观楼长联共 180 字，是中国最长的对联。登楼远眺滇池和西山睡美人轮廓。夏季荷花节气氛浓。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>6-8 月荷花节期间最美。春秋两季天气清爽适合户外游览。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>24路</strong></div>
-      <a href="/tourist.html?spot=大观公园" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>24路</strong></div>
+      <a href="/tourist.html?spot=大观公园" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card featured" data-name="海埂公园">
-    <img class="spot-img" src="/spot-real-images/haigeng.jpg" alt="海埂公园" onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#A78BFA)'">
+    <div class="tape"></div>
+    <img class="spot-img" src="/spot-real-images/haigeng.jpg" alt="海埂公园" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>海埂公园</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">西山区</span><span class="spot-tag tag-type">滇池景区</span><span class="spot-tag tag-rating">★ 4.8</span></div>
-      <p>滇池北岸最佳观鸥点，冬季红嘴鸥遮天蔽日。日落时分金色湖面令人难忘。</p>
+      <p>滇池沿岸热门目的地，冬季观鸥热度极高，红嘴鸥遮天蔽日的壮观景象令人难忘。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>沿海埂长堤步行约 2 公里→滇池大坝。可租自行车沿湖骑行。距民族村步行 10 分钟。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>冬季红嘴鸥遮天蔽日，是昆明冬天最震撼的自然景观。日落金色湖面美不胜收。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>11月-次年3月红嘴鸥季。下午 3-5 点光线+海鸥活跃。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>沿海埂长堤步行约 2 公里→滇池大坝方向。可以租自行车沿湖骑行。距云南民族村步行仅 10 分钟。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>冬季红嘴鸥遮天蔽日的壮观场面是昆明冬天最震撼的自然景观。日落时分金色湖面美不胜收。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>11月-次年3月红嘴鸥季。建议下午 3-5 点去。和海埂公园、民族村安排在同一天。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>44路、73路、24路、94路</strong></div>
-      <a href="/tourist.html?spot=海埂公园" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>44路、73路、24路、94路</strong></div>
+      <a href="/tourist.html?spot=海埂公园" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="云南民族村">
-    <img class="spot-img" src="/spot-real-images/minzu.jpg" alt="云南民族村" onerror="this.style.background='linear-gradient(135deg,#FFF7ED,#EDE9FE)'">
+    <img class="spot-img" src="/spot-real-images/minzu.jpg" alt="云南民族村" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>云南民族村</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">西山区</span><span class="spot-tag tag-type">民族文化</span><span class="spot-tag tag-rating">★ 4.7</span></div>
-      <p>25 个民族建筑与民俗文化的浓缩展示，傣族泼水、彝族火把节、大象表演。</p>
+      <p>集中展示云南 25 个民族建筑与民俗文化，可体验傣族泼水、彝族火把节等活动。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>白族村→傣族村（泼水表演）→彝族村（火把节）→纳西村→藏族村，约 3-4 小时。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>25 个民族建筑原汁原味。每天有歌舞表演和大象表演。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>4 月泼水节和 7-8 月火把节最热闹。和海埂公园安排同一天。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>白族村→傣族村（泼水表演）→彝族村（火把节）→纳西村→藏族村，完整游览约 3-4 小时。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>25 个民族建筑原汁原味。每天有歌舞表演和大象表演。泼水节期间可亲自参与泼水狂欢。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>4月泼水节和 7-8 月火把节最热闹。和海埂公园安排在同一天。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>44路、73路、A1路</strong></div>
-      <a href="/tourist.html?spot=云南民族村" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>44路、73路、A1路</strong></div>
+      <a href="/tourist.html?spot=云南民族村" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card featured" data-name="滇池大坝">
-    <img class="spot-img" src="/spot-real-images/dianchi.jpeg" alt="滇池大坝" onerror="this.style.background='linear-gradient(135deg,#E0F2FE,#EDE9FE)'">
+    <img class="spot-img" src="/spot-real-images/dianchi.jpeg" alt="滇池大坝" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>滇池大坝</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">西山区</span><span class="spot-tag tag-type">生态景观</span><span class="spot-tag tag-rating">★ 4.8</span></div>
-      <p>红嘴鸥与人零距离互动，晨观日出暮赏晚霞。冬季早晨湖面雾气如仙境。</p>
+      <p>滇池观景与红嘴鸥季核心空间，晨观日出、暮赏晚霞，红嘴鸥会从手中叼走食物。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>大坝全长约 2.5 公里，北端进→南端出。冬季买鸥粮投喂，红嘴鸥会从手中叼走。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>红嘴鸥零距离互动，远眺西山睡美人。冬季早晨湖面雾气如同仙境。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>12月-2月红嘴鸥最密集。早晨 7:30-9:00 光线好海鸥活跃。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>大坝全长约 2.5 公里，北端进→南端出。冬季可买鸥粮投喂。清晨来可以看到日出+海鸥的双重美景。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>红嘴鸥与人零距离互动。远眺西山睡美人轮廓。冬季早晨湖面起雾时如同仙境。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>12月-2月红嘴鸥最密集，早晨 7:30-9:00 去光线好海鸥饿。和海埂公园、民族村安排同一天。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>44路、94路</strong></div>
-      <a href="/tourist.html?spot=滇池大坝" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>44路、94路</strong></div>
+      <a href="/tourist.html?spot=滇池大坝" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="世博园">
-    <img class="spot-img" src="/spot-real-images/shibo.jpg" alt="世博园" onerror="this.style.background='linear-gradient(135deg,#F0FDF4,#EDE9FE)'">
+    <div class="tack"></div>
+    <img class="spot-img" src="/spot-real-images/shibo.jpg" alt="世博园" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>世博园</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">盘龙区</span><span class="spot-tag tag-type">园林展区</span><span class="spot-tag tag-rating">★ 4.5</span></div>
-      <p>各国园林微缩景观，大温室看热带雨林，适合家庭出游和亲子研学。</p>
+      <p>昆明世界园艺博览园，适合家庭与研学游，园内各国园林风格建筑各具特色。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>中国馆→国际馆→大温室→盆景园，约 3 小时。穿舒适的鞋。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>各省园林微缩+东南亚风情建筑。大温室看热带雨林和沙漠植物。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>3-5 月春季花卉展最美。避开 6-8 月雨季。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>中国馆→国际馆→大温室→盆景园，约 3 小时。园区大，穿舒适的鞋。适合带小朋友认识世界各地植物。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>各省园林微缩景观一次性看完。国际馆有东南亚风情建筑。大温室里可看到热带雨林和沙漠植物。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>3-5 月春季花卉展最美。避开 6-8 月雨季。建议上午 9-10 点入园。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>A1路、47路</strong></div>
-      <a href="/tourist.html?spot=世博园" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>A1路、47路</strong></div>
+      <a href="/tourist.html?spot=世博园" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="官渡古镇">
-    <img class="spot-img" src="/spot-real-images/guandu.jpg" alt="官渡古镇" onerror="this.style.background='linear-gradient(135deg,#FFF7ED,#F3F0FF)'">
+    <img class="spot-img" src="/spot-real-images/guandu.jpg" alt="官渡古镇" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>官渡古镇</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">官渡区</span><span class="spot-tag tag-type">历史街区</span><span class="spot-tag tag-rating">★ 4.6</span></div>
-      <p>老昆明街巷风貌+非遗小吃，妙湛寺金刚塔是全国重点文物。周末有滇剧表演。</p>
+      <p>保留老昆明街巷风貌和非遗小吃，官渡粑粑、豆花米线等特色美食不可错过。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>古镇牌坊→妙湛寺金刚塔（明代）→土主庙→官渡老街。重点：一路吃过去！</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>昆明保存完好的古镇，手工艺人现场制作糖画面人。古戏台有滇剧。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>全年皆宜。周末上午去，中午在老街吃饭。和云南省博物馆安排同一天。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>古镇牌坊进→妙湛寺金刚塔（明代）→土主庙→文明阁→官渡老街，约 2 小时。重点：一路吃过去。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>昆明少有的保存完好的古镇街区。妙湛寺金刚塔是全国重点文物。老街上手工艺人现场制作糖画。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>全年皆宜。建议周末上午去，中午在老街吃饭。和云南省博物馆安排在同一天。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>253路</strong></div>
-      <a href="/tourist.html?spot=官渡古镇" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>253路</strong></div>
+      <a href="/tourist.html?spot=官渡古镇" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card featured" data-name="斗南花市">
-    <img class="spot-img" src="/spot-real-images/dounan.png" alt="斗南花市" onerror="this.style.background='linear-gradient(135deg,#FFF0F6,#EDE9FE)'">
+    <div class="tape"></div>
+    <img class="spot-img" src="/spot-real-images/dounan.png" alt="斗南花市" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>斗南花市</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">呈贡区</span><span class="spot-tag tag-type">特色市场</span><span class="spot-tag tag-rating">★ 4.7</span></div>
-      <p>亚洲最大鲜切花交易市场，全国 70% 鲜切花从这里发出。20 元买一大束玫瑰。</p>
+      <p>亚洲最大鲜切花交易市场，全国 70% 鲜切花从这里交易，20 元能买一大束玫瑰。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>一楼零售→二楼多肉盆栽→电子拍卖大厅。货比三家再下手。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>晚上 8 点后电子拍卖大厅灯火通明最震撼。多肉种类多到眼花。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>晚上去！晚 8 点-凌晨 2 点是交易高峰，白天只有零售区错过精髓。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>主场馆一楼（零售）→二楼多肉盆栽区→电子交易大厅（感受拍卖气氛）。买花货比三家。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>晚上 8 点后电子拍卖大厅灯火通明最为震撼。多肉植物种类多人眼花缭乱。可亲手选花快递回家。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>一定要晚上去！晚上 8 点-凌晨 2 点是交易高峰。白天只能看到零售区错过精髓。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>K31路、253路</strong></div>
-      <a href="/tourist.html?spot=斗南花市" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>K31路、253路</strong></div>
+      <a href="/tourist.html?spot=斗南花市" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 
   <article class="spot-card" data-name="西山风景区">
-    <img class="spot-img" src="/spot-real-images/xishan.jpg" alt="西山风景区" onerror="this.style.background='linear-gradient(135deg,#E8F5E9,#F3F0FF)'">
+    <img class="spot-img" src="/spot-real-images/xishan.jpg" alt="西山风景区" onerror="this.style.background='#e5e0d8'">
     <div class="spot-body">
       <h3>西山风景区</h3>
       <div class="spot-meta"><span class="spot-tag tag-district">西山区</span><span class="spot-tag tag-type">山地景区</span><span class="spot-tag tag-rating">★ 4.8</span></div>
-      <p>龙门石窟悬壁而建，脚下万丈滇池。登顶俯瞰昆明全景，成就感极强。</p>
+      <p>俯瞰滇池与昆明城的经典登山线路，龙门石窟悬壁而建，登顶一览众山小。</p>
       <div class="detail-extra">
-        <div class="guide-section guide-play"><h4>🌿 怎么玩</h4><p>索道上山→龙门石窟→凌虚阁（最高点）→步行下山，约 3-4 小时。摸龙门祈福。</p></div>
-        <div class="guide-section guide-exp"><h4>✨ 体验什么</h4><p>石窟悬壁脚下万丈滇池，视野极为开阔。登顶俯瞰昆明全景成就感极强。</p></div>
-        <div class="guide-section guide-time"><h4>⏰ 最佳时节</h4><p>10-12 月秋高气爽。早晨 8 点出发避开人流。和海埂/民族村排同一天。</p></div>
+        <div class="guide-section guide-play"><h4>怎么玩</h4><p>索道上山→龙门石窟（悬崖石刻）→凌虚阁（最高点）→步行下山，约 3-4 小时。龙门"鲤鱼跃龙门"可摸一下祈福。</p></div>
+        <div class="guide-section guide-exp"><h4>可以体验到什么</h4><p>龙门石窟悬壁而建脚下万丈滇池视野极为开阔。远眺昆明城全景和滇池全貌。登顶成就感极强。</p></div>
+        <div class="guide-section guide-time"><h4>最佳时节</h4><p>10-12 月秋高气爽能见度最好。早晨 8 点出发避开人流。和海埂公园/民族村安排在滇池西岸一日游。</p></div>
       </div>
-      <div class="route-hint">🚌 途经公交：<strong>94路</strong></div>
-      <a href="/tourist.html?spot=西山风景区" class="location-btn">📍 查看公交路线</a>
+      <div class="route-hint">途经公交：<strong>94路</strong></div>
+      <a href="/tourist.html?spot=西山风景区" class="location-btn">查询到这里的公交线路</a>
       <span class="collapse-hint">点击卡片查看详细游玩攻略 ↑</span>
     </div>
   </article>
 </section>
 
-<!-- Tour Routes -->
-<div class="section-title" id="routes">
-  <span class="tag">学习路线</span>
-  <h2>推荐旅游线路</h2>
-  <p>四条精选路线，每条都是一次城市探索课程</p>
-</div>
+<div class="section-title"><h2>推荐旅游线路</h2></div>
 <section class="tour-grid">
-  <div class="tour-card">
-    <span class="tour-icon">🌊</span>
+  <div class="tour-card tour-dianchi">
+    <div class="tour-icon">🌊</div>
     <h3>滇池西岸一日精华游</h3>
     <p>昆明最经典的滇池沿岸路线，一天看尽海鸥、民族文化和湖光山色。</p>
     <div class="tour-stops">
       <span class="tour-stop">海埂公园</span><span class="tour-arrow">→</span>
       <span class="tour-stop">云南民族村</span><span class="tour-arrow">→</span>
       <span class="tour-stop">滇池大坝</span><span class="tour-arrow">→</span>
-      <span class="tour-stop">西山</span>
+      <span class="tour-stop">西山风景区</span>
     </div>
-    <span class="tour-bus">🚌 44路 / 94路</span>
+    <div class="tour-bus">44路 / 94路</div>
   </div>
-  <div class="tour-card">
-    <span class="tour-icon">🏛</span>
+  <div class="tour-card tour-city">
+    <div class="tour-icon">🏛</div>
     <h3>城市文脉半日慢游</h3>
-    <p>老城核心区，高校、公园、老街和美食一条线走完。</p>
+    <p>昆明老城核心区，高校、公园、老街和美食一条线走完。</p>
     <div class="tour-stops">
       <span class="tour-stop">云南大学</span><span class="tour-arrow">→</span>
       <span class="tour-stop">翠湖公园</span><span class="tour-arrow">→</span>
       <span class="tour-stop">南屏街</span><span class="tour-arrow">→</span>
       <span class="tour-stop">金马碧鸡坊</span>
     </div>
-    <span class="tour-bus">🚌 2路 / 100路</span>
+    <div class="tour-bus">2路 / 100路</div>
   </div>
-  <div class="tour-card">
-    <span class="tour-icon">🌿</span>
+  <div class="tour-card tour-garden">
+    <div class="tour-icon">🌿</div>
     <h3>园林博览一日游</h3>
-    <p>世博园各国园林建筑 + 金殿森林徒步，适合家庭出游。</p>
+    <p>世博园各国园林建筑 + 金殿风景区森林徒步，适合家庭出游。</p>
     <div class="tour-stops">
       <span class="tour-stop">世博园</span><span class="tour-arrow">→</span>
       <span class="tour-stop">金殿风景区</span>
     </div>
-    <span class="tour-bus">🚌 A1路 / 47路</span>
+    <div class="tour-bus">A1路 / 47路</div>
   </div>
-  <div class="tour-card">
-    <span class="tour-icon">🌸</span>
+  <div class="tour-card tour-flower">
+    <div class="tour-icon">🌸</div>
     <h3>花都古镇一日游</h3>
-    <p>白天逛官渡古镇吃小吃，晚上去斗南花市感受亚洲最大花市的震撼。</p>
+    <p>白天逛官渡古镇吃地道小吃，晚上去斗南花市感受亚洲最大花市的震撼。</p>
     <div class="tour-stops">
       <span class="tour-stop">官渡古镇</span><span class="tour-arrow">→</span>
       <span class="tour-stop">云南省博物馆</span><span class="tour-arrow">→</span>
       <span class="tour-stop">斗南花市</span>
     </div>
-    <span class="tour-bus">🚌 253路 / K31路</span>
+    <div class="tour-bus">253路 / K31路</div>
   </div>
 </section>
 
-<!-- Testimonials -->
-<div class="section-title">
-  <span class="tag">学员评价</span>
-  <h2>他们说昆明值得一去</h2>
-  <p>来自真实游客的公交旅行体验</p>
-</div>
-<section class="testimonial-grid">
-  <div class="testimonial-card">
-    <div class="t-avatar">Y</div>
-    <div class="t-stars">★★★★★</div>
-    <p class="t-text">"第一次来昆明，跟着公交路线图走了滇池线，海埂公园的红嘴鸥太震撼了！整个行程不用打车，公交全搞定。"</p>
-    <div class="t-name">— 杨同学 · 西南大学</div>
-  </div>
-  <div class="testimonial-card">
-    <div class="t-avatar">L</div>
-    <div class="t-stars">★★★★★</div>
-    <p class="t-text">"2路公交贯穿老城区，翠湖到南屏街一路下来看到了昆明最精华的部分。攻略写得特别用心！"</p>
-    <div class="t-name">— 李老师 · 昆明理工大学</div>
-  </div>
-  <div class="testimonial-card">
-    <div class="t-avatar">W</div>
-    <div class="t-stars">★★★★☆</div>
-    <p class="t-text">"晚上去了斗南花市，20 块钱买了一大束玫瑰！白天绝对感受不到那种震撼，感谢攻略的提醒。"</p>
-    <div class="t-name">— 王同学 · 云南师范大学</div>
-  </div>
+<div class="section-title"><h2>昆明美食推荐</h2></div>
+<section class="food-grid">
+  <div class="food-card"><span class="food-emoji">🍜</span><h4>过桥米线</h4><p>滚烫鸡汤 + 薄如纸的肉片 + 米线，昆明头号美食。</p><span class="food-where">建新园/桥香园（南屏街附近）</span></div>
+  <div class="food-card"><span class="food-emoji">🫓</span><h4>官渡粑粑</h4><p>官渡古镇招牌，麦面烤制外酥里软，甜咸两味。</p><span class="food-where">官渡古镇老街</span></div>
+  <div class="food-card"><span class="food-emoji">🍄</span><h4>野生菌火锅</h4><p>雨季的野生菌火锅是昆明人的年度盛宴。见手青、鸡枞、牛肝菌一锅鲜。</p><span class="food-where">关上野生菌一条街</span></div>
+  <div class="food-card"><span class="food-emoji">🫕</span><h4>小锅米线</h4><p>小铜锅现煮，加酸腌菜、肉末、韭菜，昆明人的日常早餐。</p><span class="food-where">端仕小锅（文林街）</span></div>
+  <div class="food-card"><span class="food-emoji">🥔</span><h4>烧饵块</h4><p>大米饼炭火烤到微焦，涂酱卷油条，街头随处可见的平民美食。</p><span class="food-where">菜市场/路边摊</span></div>
+  <div class="food-card"><span class="food-emoji">🧀</span><h4>烤乳扇</h4><p>牛奶薄片烤到金黄，涂玫瑰糖卷起来吃。奶香浓郁加花香。</p><span class="food-where">南强街夜市/民族村</span></div>
+  <div class="food-card"><span class="food-emoji">🍲</span><h4>汽锅鸡</h4><p>云南建水汽锅蒸制，不加水纯靠蒸汽凝结成汤，清亮味浓。</p><span class="food-where">福照楼（翠湖附近）</span></div>
+  <div class="food-card"><span class="food-emoji">🌶</span><h4>宜良烤鸭</h4><p>松针熏烤皮脆肉嫩，和北京烤鸭完全不同的风味体验。</p><span class="food-where">宜良县/市区烤鸭店</span></div>
 </section>
 
-<!-- CTA -->
-<section class="cta-section">
-  <div class="cta-card">
-    <h2>🚌 准备好了吗？</h2>
-    <p>打开地图，选一条路线，让公交车带你看遍昆明的 12 个精彩角落。完全免费，不用注册。</p>
-    <a href="/tourist.html" class="clay-btn cta-white">🎯 立即开始探索</a>
-  </div>
-</section>
-
-<!-- Footer -->
 <footer class="footer">
-  🚌 不用注册，打开即用 · 12 个景点 · 4 条路线 · 10 条公交线路 · 昆明公交旅游导览
+  <span class="dash-arrow">→</span> 不用注册，打开即用 | 点击景点卡片展开游玩攻略 | 点击巴士按钮查询公交线路 | 12 个景点 · 4 条推荐路线 · 8 道昆明美食
 </footer>
 
 <script>
@@ -770,16 +495,6 @@ document.querySelectorAll('.spot-card').forEach(card => {
     }
   });
 });
-
-// animate progress bar on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.querySelector('.progress-bar-fill')?.classList.add('animate');
-    }
-  });
-}, { threshold: 0.5 });
-observer.observe(document.querySelector('.progress-card'));
 </script>
 </body>
 </html>
