@@ -792,7 +792,7 @@ onUnmounted(() => {
   position: relative;
   min-height: 576px;
   padding: 14px;
-  background: var(--surface);
+  background: #F1F5F9;
   border-radius: 12px;
 }
 :global([data-theme="dark"]) .screen-map-panel {
@@ -804,7 +804,7 @@ onUnmounted(() => {
 }
 
 .heat-map-only {
-  background: var(--surface);
+  background: #F1F5F9;
 }
 :global([data-theme="dark"]) .heat-map-only {
   background:
@@ -893,7 +893,9 @@ onUnmounted(() => {
   opacity: 0;
   transition: opacity 0.35s ease;
   overflow: hidden;
+  background: #E2E8F0;
 }
+:global([data-theme="dark"]) .amap-heatmap { background: #0F172A; }
 
 .amap-heatmap.ready {
   opacity: 1;
@@ -970,32 +972,46 @@ onUnmounted(() => {
 }
 
 .city-outline {
+  fill: rgba(59, 130, 246, 0.04);
+  stroke: #CBD5E1;
+  stroke-width: 2;
+}
+:global([data-theme="dark"]) .city-outline {
   fill: rgba(14, 165, 233, 0.045);
   stroke: rgba(125, 211, 252, 0.24);
-  stroke-width: 2;
 }
 
 .map-contour {
   fill: none;
-  stroke: rgba(125, 211, 252, 0.13);
+  stroke: #CBD5E1;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-dasharray: 6 10;
 }
+:global([data-theme="dark"]) .map-contour {
+  stroke: rgba(125, 211, 252, 0.13);
+}
 
 .map-contour.weak {
-  stroke: rgba(125, 211, 252, 0.08);
+  stroke: #E2E8F0;
   stroke-width: 1.5;
+}
+:global([data-theme="dark"]) .map-contour.weak {
+  stroke: rgba(125, 211, 252, 0.08);
 }
 
 .map-place-labels text {
-  fill: rgba(186, 230, 253, 0.32);
+  fill: #64748B;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0;
   paint-order: stroke;
-  stroke: rgba(2, 6, 23, 0.86);
+  stroke: rgba(255,255,255,0.8);
   stroke-width: 5px;
+}
+:global([data-theme="dark"]) .map-place-labels text {
+  fill: rgba(186, 230, 253, 0.32);
+  stroke: rgba(2, 6, 23, 0.86);
 }
 
 .spot-heat-list {
