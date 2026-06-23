@@ -177,7 +177,7 @@ async function updateRouteStatsFromSamples(routeId) {
             ROUND(AVG(load_rate), 2) AS avgLoad,
             ROUND(AVG(speed), 2) AS avgSpeed
        FROM collection_samples
-      WHERE route_id = ? AND collected_at >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)`,
+      WHERE route_id = ? AND collected_at >= DATE_SUB(NOW(), INTERVAL 10 MINUTE)`,
     [routeId]
   );
   if (!sampleStats || sampleStats.cnt === 0) return;
@@ -209,7 +209,8 @@ async function updateRouteStatsFromSamples(routeId) {
     78, 98
   );
   const flowHeat = Math.log10(Math.max(passengerFlow, 1000)) * 14 - 24;
-  const heat = Math.round(clamp(baseHeat * 0.55 + flowHeat * 0.45, 45, 99));
+  const modelHeat = clamp(baseHeat * 0.55 + flowHeat * 0.45, 45, 99);
+  const heat = Math.round(blendDynamicHeat(modelHeat, avgPax, avgLoad, sampleCount));
 
   await getPool().query(
     `INSERT INTO route_statistics (route_id, stat_date, passenger_flow, punctuality, congestion, heat)
@@ -311,7 +312,15 @@ async function applyLiveCollection(rows) {
     }
 
     const flowHeat = Math.log10(Math.max(passengerFlow, 1000)) * 14 - 24;
-    const heat = Math.round(clamp(baseHeat * 0.55 + flowHeat * 0.45, 45, 99));
+    const modelHeat = clamp(baseHeat * 0.55 + flowHeat * 0.45, 45, 99);
+    const heat = sample
+      ? blendDynamicHeat(
+        modelHeat,
+        Number(sample.avgPassengerCount || 0),
+        Number(sample.avgLoadRate || 0),
+        Number(sample.sampleCount || 0)
+      )
+      : Math.round(modelHeat);
 
     return {
       ...row,
@@ -325,6 +334,14 @@ async function applyLiveCollection(rows) {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function blendDynamicHeat(modelHeat, avgPassenger, avgLoadRate, sampleCount) {
+  const passengerSignal = Math.min(100, Number(avgPassenger || 0) / 80 * 100);
+  const observedDemandHeat = passengerSignal * 0.6 + Number(avgLoadRate || 0) * 0.4;
+  const observationWeight = Math.min(0.42, 0.24 + Number(sampleCount || 0) * 0.03);
+  const dynamicHeat = modelHeat * (1 - observationWeight) + observedDemandHeat * observationWeight;
+  return Math.round(clamp(dynamicHeat, 45, 99) * 10) / 10;
 }
 
 async function createRoute(payload) {

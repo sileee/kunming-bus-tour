@@ -43,8 +43,14 @@ async function request(path, options = {}) {
     }),
     expectedStatus: 400
   });
+  const login = await request('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+  });
   const recalculatedHeat = await request('/api/admin/recalculate-heat', {
-    method: 'POST'
+    method: 'POST',
+    headers: { Authorization: `Bearer ${login.data.token}` }
   });
 
   if (health.status !== 'ok') throw new Error('health check failed');
@@ -56,6 +62,7 @@ async function request(path, options = {}) {
   if (!Array.isArray(recalculatedHeat.data) || recalculatedHeat.data.length < 1) throw new Error('heat recalculation failed');
 
   console.log('API smoke test passed');
+  process.exit(0);
 })().catch((error) => {
   console.error(error);
   process.exit(1);

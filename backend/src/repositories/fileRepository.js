@@ -245,6 +245,36 @@ function collectionModeration(routeId, modelFlow) {
   return Math.round(modelFlow + livePassengerIncrement);
 }
 
+function dynamicHeatFromFreshSamples(modelHeat, routeId, now = new Date()) {
+  const windowMs = 10 * 60 * 1000;
+  const freshSamples = state.collectionSamples
+    .filter((sample) => sample.routeId === routeId && sample.id > collectionBaselineId)
+    .filter((sample) => now.getTime() - new Date(sample.collectedAt).getTime() <= windowMs)
+    .slice(-12);
+
+  if (!freshSamples.length) return Math.round(modelHeat);
+
+  let weightTotal = 0;
+  let passengerTotal = 0;
+  let loadTotal = 0;
+  freshSamples.forEach((sample) => {
+    const ageMs = Math.max(0, now.getTime() - new Date(sample.collectedAt).getTime());
+    const recencyWeight = Math.max(0.15, 1 - ageMs / windowMs);
+    weightTotal += recencyWeight;
+    passengerTotal += Number(sample.passengerCount || 0) * recencyWeight;
+    loadTotal += Number(sample.loadRate || 0) * recencyWeight;
+  });
+
+  const avgPassenger = passengerTotal / Math.max(weightTotal, 1);
+  const avgLoadRate = loadTotal / Math.max(weightTotal, 1);
+  const passengerSignal = Math.min(100, avgPassenger / 80 * 100);
+  const observedDemandHeat = passengerSignal * 0.6 + avgLoadRate * 0.4;
+  const observationWeight = Math.min(0.42, 0.24 + freshSamples.length * 0.03);
+  const dynamicHeat = modelHeat * (1 - observationWeight) + observedDemandHeat * observationWeight;
+
+  return Math.round(Math.max(45, Math.min(99, dynamicHeat)) * 10) / 10;
+}
+
 /* ---------- Route Statistics Simulation ----------
    Produces passengerFlow, congestion, punctuality, heat for a route. ---------- */
 function simulateRouteStatistic(route, date = new Date()) {
@@ -296,9 +326,8 @@ function simulateRouteStatistic(route, date = new Date()) {
 
   // Heat: blend of spot popularity (55%) + passenger flow intensity (45%)
   const flowHeat = Math.log10(Math.max(passengerFlow, 1000)) * 14 - 24;
-  const heat = Math.round(
-    Math.max(52, Math.min(99, avgSpotHeat * 0.55 + flowHeat * 0.45))
-  );
+  const modelHeat = Math.max(52, Math.min(99, avgSpotHeat * 0.55 + flowHeat * 0.45));
+  const heat = dynamicHeatFromFreshSamples(modelHeat, route.id, date);
 
   return {
     id: route.id,

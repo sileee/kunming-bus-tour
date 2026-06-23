@@ -245,7 +245,8 @@ function simulateRouteStatistic(route: RouteDef, date = new Date()): RouteStatis
   const punctuality = Math.round(Math.max(82, Math.min(97, basePunctuality + noise2)) * 10) / 10;
 
   const flowHeat = Math.log10(Math.max(passengerFlow, 1000)) * 14 - 24;
-  const heat = Math.round(Math.max(52, Math.min(99, avgSpotHeat * 0.55 + flowHeat * 0.45)));
+  const modelHeat = Math.max(52, Math.min(99, avgSpotHeat * 0.55 + flowHeat * 0.45));
+  const heat = dynamicHeatFromFreshSamples(modelHeat, route.id, date);
 
   return {
     id: route.id, routeId: route.id, date: date.toISOString().slice(0, 10),
@@ -275,6 +276,36 @@ function collectionModeration(routeId: number, modelFlow: number): number {
   const avgLoadRate = recent.reduce((s, sm) => s + (sm.loadRate || 0), 0) / recent.length;
   const avgPax = recent.reduce((s, sm) => s + (sm.passengerCount || 0), 0) / recent.length;
   return Math.round(modelFlow * 0.65 + avgPax * 28 * 0.35);
+}
+
+function dynamicHeatFromFreshSamples(modelHeat: number, routeId: number, now = new Date()): number {
+  const windowMs = 10 * 60 * 1000;
+  const freshSamples = collectionSamples
+    .filter(sample => sample.routeId === routeId && sample.id > collectionBaselineId)
+    .filter(sample => now.getTime() - new Date(sample.collectedAt).getTime() <= windowMs)
+    .slice(-12);
+
+  if (!freshSamples.length) return Math.round(modelHeat);
+
+  let weightTotal = 0;
+  let passengerTotal = 0;
+  let loadTotal = 0;
+  freshSamples.forEach(sample => {
+    const ageMs = Math.max(0, now.getTime() - new Date(sample.collectedAt).getTime());
+    const recencyWeight = Math.max(0.15, 1 - ageMs / windowMs);
+    weightTotal += recencyWeight;
+    passengerTotal += Number(sample.passengerCount || 0) * recencyWeight;
+    loadTotal += Number(sample.loadRate || 0) * recencyWeight;
+  });
+
+  const avgPassenger = passengerTotal / Math.max(weightTotal, 1);
+  const avgLoadRate = loadTotal / Math.max(weightTotal, 1);
+  const passengerSignal = Math.min(100, avgPassenger / 80 * 100);
+  const observedDemandHeat = passengerSignal * 0.6 + avgLoadRate * 0.4;
+  const observationWeight = Math.min(0.42, 0.24 + freshSamples.length * 0.03);
+  const dynamicHeat = modelHeat * (1 - observationWeight) + observedDemandHeat * observationWeight;
+
+  return Math.round(Math.max(45, Math.min(99, dynamicHeat)) * 10) / 10;
 }
 
 // Trend buffer
