@@ -12,6 +12,10 @@ const state = {
   ]
 };
 
+// Samples bundled with the demo establish the initial dashboard state. Only
+// samples collected after startup are accumulated into today's live flow.
+const collectionBaselineId = Math.max(0, ...state.collectionSamples.map((sample) => sample.id));
+
 /* ================================================================
    Kunming Tourist Bus Passenger Flow Simulation Model v2
    Based on: Zhao et al. (2024, Sustainability) — Gravity Model
@@ -132,7 +136,6 @@ function computeGravityFlow(route, routeStops, routeSpots, date) {
   const isTourist = String(route.type).includes('旅游') || String(route.type).includes('景区');
   const month = date.getMonth() + 1;
   const hour = date.getHours();
-  const minuteSeed = date.getMinutes() + date.getSeconds() / 60;
 
   // Count how many routes pass through each spot (connectivity)
   const spotRouteCount = {};
@@ -224,7 +227,7 @@ function computeGravityFlow(route, routeStops, routeSpots, date) {
 
   // Stochastic perturbation (truncated normal, ±2σ → ~±15% max)
   const noise = truncatedNormal(
-    route.id * 37 + date.getDate() + month * 13 + hour * 7 + minuteSeed * 0.3,
+    route.id * 37 + date.getDate() + month * 13 + hour * 7,
     1.0,
     0.06
   );
@@ -233,25 +236,13 @@ function computeGravityFlow(route, routeStops, routeSpots, date) {
   return Math.round(totalFlow);
 }
 
-/* ---------- Real-time collection data moderation ----------
-   Blends model prediction with actual sensor data using exponential smoothing.
-   α = 0.35: moderate trust in live data (balances model vs observation). ---------- */
+/* ---------- Real-time collection accumulation ----------
+   Adds newly reported passengers to the stable model baseline. ---------- */
 function collectionModeration(routeId, modelFlow) {
-  const recentSamples = state.collectionSamples
-    .filter(s => s.routeId === routeId)
-    .slice(-12);
-
-  if (recentSamples.length === 0) return modelFlow;
-
-  const avgLoadRate = recentSamples.reduce((s, sm) => s + Number(sm.loadRate || 0), 0) / recentSamples.length;
-  const avgPax = recentSamples.reduce((s, sm) => s + Number(sm.passengerCount || 0), 0) / recentSamples.length;
-
-  // Estimate observed flow from samples: avgPax × trips_per_day_estimate
-  // Typical bus makes ~16 round trips/day, so ~32 directional trips
-  const observedFlow = avgPax * 28;
-  // Blend: 65% model + 35% observation
-  const alpha = 0.35;
-  return Math.round(modelFlow * (1 - alpha) + observedFlow * alpha);
+  const livePassengerIncrement = state.collectionSamples
+    .filter((sample) => sample.routeId === routeId && sample.id > collectionBaselineId)
+    .reduce((sum, sample) => sum + Number(sample.passengerCount || 0), 0);
+  return Math.round(modelFlow + livePassengerIncrement);
 }
 
 /* ---------- Route Statistics Simulation ----------
@@ -280,15 +271,26 @@ function simulateRouteStatistic(route, date = new Date()) {
   const dailyCapacity = vehicleTrips * 80;
   const loadFactor = passengerFlow / Math.max(dailyCapacity, 1);
   const sigmoid = (x) => 1 / (1 + Math.exp(-3.5 * (x - 0.5)));
-  const congestion = Math.round(
+  const modelCongestion = Math.round(
     34 + sigmoid(loadFactor) * 54 + truncatedNormal(route.id * 23 + date.getHours(), 0, 2.0)
   );
-  const clampedCongestion = Math.max(34, Math.min(92, congestion));
+  const recentSamples = state.collectionSamples.filter(s => s.routeId === route.id).slice(-12);
+  const avgLoadRate = recentSamples.length
+    ? recentSamples.reduce((sum, sample) => sum + Number(sample.loadRate || 0), 0) / recentSamples.length
+    : modelCongestion;
+  const avgSpeed = recentSamples.length
+    ? recentSamples.reduce((sum, sample) => sum + Number(sample.speed || 0), 0) / recentSamples.length
+    : 27;
+  const clampedCongestion = Math.round(
+    Math.max(34, Math.min(92, modelCongestion * 0.65 + avgLoadRate * 0.35)) * 10
+  ) / 10;
 
   // Punctuality: inversely related to congestion + road conditions (district-dependent)
   const districts = [...new Set(routeStops.map(s => s.district))];
   const avgDistrictMass = districts.reduce((s, d) => s + (districtMass[d]?.employment || 0.7), 0) / Math.max(districts.length, 1);
-  const basePunctuality = 93.5 - clampedCongestion * 0.06 - avgDistrictMass * 2.5;
+  const basePunctuality = 93.5 - clampedCongestion * 0.06 - avgDistrictMass * 2.5
+    - Math.max(0, avgLoadRate - 70) * 0.025
+    + (avgSpeed - 27) * 0.035;
   const noise = truncatedNormal(route.id * 13 + date.getMinutes(), 0, 1.2);
   const punctuality = Math.round(Math.max(82, Math.min(97, basePunctuality + noise)) * 10) / 10;
 

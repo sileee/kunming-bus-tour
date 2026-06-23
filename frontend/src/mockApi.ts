@@ -208,6 +208,7 @@ const collectionSamples: CollectionSample[] = [
   { id: 3, routeId: 4, collectedAt: new Date(Date.now() - 1000 * 60 * 4).toISOString(), speed: 31, passengerCount: 42, loadRate: 69, source: '移动端上报' },
   { id: 4, routeId: 1, collectedAt: new Date(Date.now() - 1000 * 60 * 2).toISOString(), speed: 26, passengerCount: 39, loadRate: 64, source: '电子站牌' }
 ];
+const collectionBaselineId = Math.max(0, ...collectionSamples.map(sample => sample.id));
 
 // ====== 工具函数 ======
 function simulateRouteStatistic(route: RouteDef, date = new Date()): RouteStatistic {
@@ -215,25 +216,31 @@ function simulateRouteStatistic(route: RouteDef, date = new Date()): RouteStatis
   const routeSpots = route.spotIds.map(sid => spots.find(s => s.id === sid)).filter(Boolean) as Spot[];
   let passengerFlow = computeGravityFlow(route, routeStops, routeSpots, date);
 
-  // collection moderation
+  // Each newly collected passenger contributes to today's cumulative flow.
   const recent = collectionSamples.filter(s => s.routeId === route.id).slice(-12);
-  if (recent.length > 0) {
-    const avgLoadRate = recent.reduce((s, sm) => s + (sm.loadRate || 0), 0) / recent.length;
-    const avgPax = recent.reduce((s, sm) => s + (sm.passengerCount || 0), 0) / recent.length;
-    const alpha = 0.35;
-    passengerFlow = Math.round(passengerFlow * (1 - alpha) + avgPax * 28 * alpha);
-  }
+  const livePassengerIncrement = collectionSamples
+    .filter(sample => sample.routeId === route.id && sample.id > collectionBaselineId)
+    .reduce((sum, sample) => sum + Number(sample.passengerCount || 0), 0);
+  passengerFlow += livePassengerIncrement;
 
   const avgSpotHeat = routeSpots.length > 0 ? routeSpots.reduce((s, sp) => s + sp.heat, 0) / routeSpots.length : 55;
   const vehicleTrips = Math.max(24, 48 + routeStops.length * 2.0);
   const loadFactor = passengerFlow / Math.max(vehicleTrips * 80, 1);
   const sigmoid = (x: number) => 1 / (1 + Math.exp(-3.5 * (x - 0.5)));
-  let congestion = Math.round(34 + sigmoid(loadFactor) * 54 + truncatedNormal(route.id * 23 + date.getHours(), 0, 2.0));
-  congestion = Math.max(34, Math.min(92, congestion));
+  const modelCongestion = Math.round(34 + sigmoid(loadFactor) * 54 + truncatedNormal(route.id * 23 + date.getHours(), 0, 2.0));
+  const avgLoadRate = recent.length
+    ? recent.reduce((sum, sample) => sum + Number(sample.loadRate || 0), 0) / recent.length
+    : modelCongestion;
+  const avgSpeed = recent.length
+    ? recent.reduce((sum, sample) => sum + Number(sample.speed || 0), 0) / recent.length
+    : 27;
+  const congestion = Math.round(Math.max(34, Math.min(92, modelCongestion * 0.65 + avgLoadRate * 0.35)) * 10) / 10;
 
   const districts = [...new Set(routeStops.map(s => s.district))];
   const avgDistrictMass = districts.reduce((s, d) => s + (districtMass[d]?.employment || 0.7), 0) / Math.max(districts.length, 1);
-  const basePunctuality = 93.5 - congestion * 0.06 - avgDistrictMass * 2.5;
+  const basePunctuality = 93.5 - congestion * 0.06 - avgDistrictMass * 2.5
+    - Math.max(0, avgLoadRate - 70) * 0.025
+    + (avgSpeed - 27) * 0.035;
   const noise2 = truncatedNormal(route.id * 13 + date.getMinutes(), 0, 1.2);
   const punctuality = Math.round(Math.max(82, Math.min(97, basePunctuality + noise2)) * 10) / 10;
 

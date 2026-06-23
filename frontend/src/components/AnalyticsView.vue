@@ -85,7 +85,8 @@ function renderCharts() {
         color: '#64748b',
         fontSize: 10,
         fontWeight: 600,
-        formatter: (p: any) => p.value >= 10000 ? (p.value / 10000).toFixed(1) + 'w' : p.value
+        // Keep live increments visible; compact “3.2w” labels hide small batches.
+        formatter: (p: any) => Number(p.value).toLocaleString('zh-CN')
       }
     }]
   });
