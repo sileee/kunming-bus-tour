@@ -29,6 +29,8 @@ let routeTypeChart: echarts.ECharts | null = null;
 let amapInstance: any = null;
 let heatMapLayer: any = null;
 let heatTimer = 0;
+let heatDrawFrame = 0;
+let themeObserver: MutationObserver | null = null;
 
 const topRoutes = computed(() =>
   [...props.statistics]
@@ -266,6 +268,12 @@ function handleResize() {
   if (amapInstance) amapInstance.resize();
 }
 
+function getAmapStyle() {
+  return document.documentElement.getAttribute('data-theme') === 'dark'
+    ? 'amap://styles/darkblue'
+    : 'amap://styles/normal';
+}
+
 function loadAmapScript() {
   const key = import.meta.env.VITE_AMAP_KEY;
   if (!key) return Promise.reject(new Error('未配置 VITE_AMAP_KEY'));
@@ -307,7 +315,7 @@ function renderAmapHeatMap() {
       rotateEnable: false,
       showLabel: false,
       features: ['bg', 'road'],
-      mapStyle: 'amap://styles/darkblue',
+      mapStyle: getAmapStyle(),
     });
   }
 
@@ -332,7 +340,23 @@ function renderAmapHeatMap() {
     });
   }
 
-  heatMapLayer.setDataSet({ data, max });
+  // AMap.HeatMap draws on its own canvas. Rapid consecutive setDataSet calls
+  // can leave the previous canvas frame visible, especially while map tiles are
+  // repainting. Coalesce updates and explicitly clear before drawing the latest
+  // dataset so heat spots never accumulate visually.
+  window.cancelAnimationFrame(heatDrawFrame);
+  heatMapLayer.setDataSet({ data: [], max: 1 });
+  heatDrawFrame = window.requestAnimationFrame(() => {
+    if (!heatMapLayer || !amapInstance) return;
+    heatMapLayer.setDataSet({ data, max });
+    heatDrawFrame = 0;
+  });
+}
+
+function syncAmapTheme() {
+  if (!amapInstance) return;
+  amapInstance.setMapStyle(getAmapStyle());
+  renderAmapHeatMap();
 }
 
 async function initAmapHeatMap() {
@@ -367,17 +391,27 @@ onMounted(() => {
   heatTimer = window.setInterval(() => {
     if (props.collectorRunning) heatTick.value += 1;
   }, 1600);
+  themeObserver = new MutationObserver(syncAmapTheme);
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   window.addEventListener('resize', handleResize);
 });
 
 onUnmounted(() => {
   disposeCharts();
   disposeRouteTypeChart();
+  window.cancelAnimationFrame(heatDrawFrame);
+  heatDrawFrame = 0;
+  if (heatMapLayer) {
+    heatMapLayer.setDataSet({ data: [], max: 1 });
+    if (heatMapLayer.hide) heatMapLayer.hide();
+  }
   if (amapInstance) {
     amapInstance.destroy();
     amapInstance = null;
     heatMapLayer = null;
   }
+  themeObserver?.disconnect();
+  themeObserver = null;
   window.clearInterval(heatTimer);
   window.removeEventListener('resize', handleResize);
 });
