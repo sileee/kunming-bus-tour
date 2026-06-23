@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { api, setAuthToken } from '../api';
 
 const emit = defineEmits<{
@@ -29,6 +29,27 @@ async function handleLogin() {
     busy.value = false;
   }
 }
+
+/* ── Streaming subtitle typewriter ── */
+const loginSubtitle = ref('');
+const fullLoginSubtitle = '智慧公交 · 数据驱动决策';
+const subIdx = ref(0);
+let subTimer = 0;
+
+onMounted(() => {
+  subTimer = window.setInterval(() => {
+    if (subIdx.value < fullLoginSubtitle.length) {
+      subIdx.value += 1;
+      loginSubtitle.value = fullLoginSubtitle.slice(0, subIdx.value);
+    } else {
+      window.clearInterval(subTimer);
+    }
+  }, 50);
+});
+
+onUnmounted(() => {
+  window.clearInterval(subTimer);
+});
 </script>
 
 <template>
@@ -42,6 +63,7 @@ async function handleLogin() {
         </div>
       </div>
       <h2>管理员登录</h2>
+      <p class="login-subtitle"><span class="streaming-text">{{ loginSubtitle }}</span></p>
       <form @submit.prevent="handleLogin">
         <label>
           用户名
@@ -73,7 +95,7 @@ async function handleLogin() {
           {{ busy ? '登录中...' : '登 录' }}
         </button>
       </form>
-          </div>
+    </div>
   </div>
 </template>
 
@@ -84,17 +106,19 @@ async function handleLogin() {
   justify-content: center;
   min-height: 100vh;
   padding: 24px;
-  background: radial-gradient(ellipse at 50% 30%, rgba(94,106,210,0.08), transparent 60%),
-              radial-gradient(ellipse at 80% 70%, rgba(20,184,166,0.05), transparent 50%);
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(124,58,237,0.06), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.04), transparent 50%),
+    var(--bg-base);
 }
 .login-card {
   width: 100%;
-  max-width: 400px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 36px 32px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 16px 48px rgba(0,0,0,0.25);
+  max-width: 420px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: var(--shadow-elevated);
 }
 .login-brand {
   display: flex;
@@ -106,36 +130,43 @@ async function handleLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: var(--color-accent);
+  width: 48px;
+  height: 48px;
+  background: var(--accent-gradient);
   color: #fff;
   font-size: 18px;
   font-weight: 700;
-  border-radius: 12px;
-  box-shadow: 0 0 20px var(--color-accent-glow-weak);
+  border-radius: 14px;
+  box-shadow: 0 0 24px var(--accent-glow);
 }
 .login-brand strong {
   display: block;
   font-size: 16px;
-  color: var(--color-foreground);
+  color: var(--foreground);
 }
 .login-brand small {
   font-size: 12px;
-  color: var(--color-muted);
+  color: var(--foreground-muted);
 }
 .login-card h2 {
   font-size: 22px;
   font-weight: 600;
-  color: var(--color-foreground);
-  margin-bottom: 20px;
+  color: var(--foreground);
+  margin-bottom: 10px;
   letter-spacing: -0.02em;
+}
+.login-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: var(--foreground-muted);
+  margin-bottom: 24px;
+  min-height: 1.5em;
 }
 .login-card label {
   display: block;
   font-size: 12px;
   font-weight: 500;
-  color: var(--color-muted);
+  color: var(--foreground-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 14px;
@@ -143,51 +174,57 @@ async function handleLogin() {
 .login-card input {
   display: block;
   width: 100%;
-  margin-top: 4px;
-  padding: 10px 14px;
+  margin-top: 6px;
+  padding: 12px 16px;
   font-size: 14px;
-  background: var(--color-elevated);
-  border: 1px solid var(--color-border);
+  background: var(--surface);
+  border: 1px solid var(--border-default);
   border-radius: 10px;
-  color: var(--color-foreground);
+  color: var(--foreground);
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .login-card input:focus {
-  border-color: var(--color-accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .password-wrap {
   position: relative;
 }
 .password-toggle {
   position: absolute;
-  right: 4px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: var(--color-muted);
+  color: var(--foreground-muted);
   font-size: 12px;
   cursor: pointer;
   padding: 4px 10px;
+  border-radius: 6px;
+}
+.password-toggle:hover {
+  background: var(--surface-hover);
 }
 .login-error {
-  color: var(--color-danger);
+  color: #ef4444;
   font-size: 13px;
   margin-bottom: 12px;
 }
 .login-submit {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   font-size: 15px;
   font-weight: 600;
   margin-top: 4px;
+  background: var(--accent-gradient);
+  border-radius: 12px;
+  box-shadow: var(--shadow-btn-primary);
+  transition: all 0.25s var(--ease-expo);
 }
-.login-hint {
-  text-align: center;
-  margin-top: 18px;
-  font-size: 12px;
-  color: var(--color-subtle);
-  line-height: 1.6;
+.login-submit:hover:not(:disabled) {
+  box-shadow: var(--shadow-btn-primary-hover), 0 0 30px rgba(124, 58, 237, 0.25);
+  transform: translateY(-2px);
 }
 </style>

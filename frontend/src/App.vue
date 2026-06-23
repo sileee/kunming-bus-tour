@@ -37,6 +37,21 @@ const dataMode = ref('...');
 let refreshTimer = 0;
 let collectorTimer = 0;
 let clockTimer = 0;
+let subtitleTimer = 0;
+
+/* ── Streaming topbar subtitle typewriter ── */
+const topbarSubtitle = ref('');
+const subtitleFull = '智慧城市 · 公共交通数据可视化场景';
+const subtitleIndex = ref(0);
+
+function typeSubtitle() {
+  if (subtitleIndex.value < subtitleFull.length) {
+    subtitleIndex.value += 1;
+    topbarSubtitle.value = subtitleFull.slice(0, subtitleIndex.value);
+  } else {
+    window.clearInterval(subtitleTimer);
+  }
+}
 
 function updateClock() {
   currentTime.value = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -174,7 +189,7 @@ function toggleCollector() {
   collectorTimer = window.setInterval(runCollectorBatch, 1500);
 }
 
-const isDark = ref(localStorage.getItem('theme') !== 'light');
+const isDark = ref(localStorage.getItem('theme') === 'dark');
 
 function toggleTheme() {
   isDark.value = !isDark.value;
@@ -212,19 +227,21 @@ onMounted(async () => {
   }
   updateClock();
   clockTimer = window.setInterval(updateClock, 1000);
+  subtitleTimer = window.setInterval(typeSubtitle, 60);
 });
 
 onUnmounted(() => {
   window.clearInterval(refreshTimer);
   window.clearInterval(collectorTimer);
   window.clearInterval(clockTimer);
+  window.clearInterval(subtitleTimer);
 });
 </script>
 
 <template>
   <!-- Auth checking state -->
   <div v-if="authChecking" class="login-overlay" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
-    <div style="text-align:center;color:var(--color-muted);">
+    <div style="text-align:center;color:var(--foreground-muted);">
       <span style="font-size:32px;display:block;margin-bottom:8px;">⏳</span>
       <span>验证登录状态...</span>
     </div>
@@ -338,7 +355,7 @@ onUnmounted(() => {
     <main class="workspace">
       <header class="topbar">
         <div>
-          <p>智慧城市 · 公共交通数据可视化场景</p>
+          <p><span class="streaming-text">{{ topbarSubtitle }}</span></p>
           <h1>昆明公交旅游路线数据管理平台</h1>
         </div>
         <div style="display:flex;align-items:center;gap:16px;">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
 import type { BusRoute, Overview, RouteStatistic } from '../types';
 
 const props = defineProps<{
@@ -20,6 +20,27 @@ const puzzleTiles = ref<number[]>([0, 1, 2, 3, 4, 5, 6, 7, 8]);
 const puzzleWave = ref(false);
 let animFrame = 0;
 let waveTimer = 0;
+let heroTimer = 0;
+
+/* ── Streaming hero title typewriter ── */
+const heroTitle = ref('');
+const fullHeroTitle = '用实时数据驱动昆明旅游公交决策';
+const heroIdx = ref(0);
+
+onMounted(() => {
+  heroTimer = window.setInterval(() => {
+    if (heroIdx.value < fullHeroTitle.length) {
+      heroIdx.value += 1;
+      heroTitle.value = fullHeroTitle.slice(0, heroIdx.value);
+    } else {
+      window.clearInterval(heroTimer);
+    }
+  }, 40);
+});
+
+onUnmounted(() => {
+  window.clearInterval(heroTimer);
+});
 
 const puzzleSolved = computed(() => puzzleTiles.value.every((tile, index) => tile === index));
 
@@ -165,7 +186,7 @@ function tileStyle(tile: number) {
     <article class="panel hero-panel dashboard-hero-panel">
       <div class="dashboard-hero-copy">
         <p class="eyebrow">公共交通数据可视化</p>
-        <h2>用实时数据驱动昆明旅游公交决策</h2>
+        <h2>{{ heroTitle }}<span v-if="heroIdx < fullHeroTitle.length" class="streaming-text"></span></h2>
         <p>
           覆盖翠湖、滇池、民族村、世博园、官渡古镇、斗南花市等核心目的地。
           所有指标由后端客流仿真模型实时计算，采集数据驱动全站可视化联动。
